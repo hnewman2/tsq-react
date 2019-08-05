@@ -240,7 +240,7 @@ export default class Inbox extends Component {
 
         let from = e.target.id;
         let fromName = document.getElementById(from).innerHTML;
-        //  console.log(fromName + from);
+          console.log("document.getelement.id("+ from+ ").innerHTML: "+ fromName );
         if (fromName === this.getPhone(from)) {
             fromName = '';
         }

@@ -160,7 +160,7 @@ export default class AdminHome extends Component {
                 <summary>
                     {' Route: ' + i.route_ID}
                     <PrintComponents trigger={<button class='print-btn btn btn-secondary btn-sm'>Print </button>}>
-                        {<div class='print-table'>{table}</div>}
+                        <div /*class='print-table'*/>{table}</div>
                     </PrintComponents>
                 </summary>
                 {table}
