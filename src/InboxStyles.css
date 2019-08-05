@@ -1,0 +1,222 @@
+.refresh {
+    float: right;
+    margin-top: 1vh;
+    margin-right: 1vh;
+    font-size: 20px;
+}
+
+.inbox-container {
+    width: 60%;
+    height: 80%;
+    font-size: 20px;
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 3%;
+    display: inline-block;
+}
+
+.contacts-container {
+    height: 100%;
+    width: 35%;
+    border: solid 1px darkgray;
+    float: left;
+    vertical-align: top;
+    overflow: scroll;
+    overflow-x: hidden;
+    text-transform: capitalize;
+}
+
+.contacts-table {
+    width: 100%;
+    height: 92%;
+    text-align: left;
+}
+
+.contacts-table td {
+    border-bottom: solid 1px lightgray;
+    border-collapse: collapse;
+}
+
+.contacts-table tr:hover {
+    background-color: gray;
+    cursor: pointer;
+}
+
+.messages-container {
+    width: 65%;
+    height: 100%;
+    vertical-align: top;
+    float: right;
+}
+
+.contact-search{
+   /* height: 8%;*/
+    text-transform: capitalize;
+    text-align: left;
+    background: rgb(190, 187, 187);
+}
+
+.search-contacts-container{
+
+    height: 8%;
+}
+.number {
+    height: 8%;
+    width: 100%;
+    background: rgb(190, 187, 187);
+    float: left;
+    font-size: 25px;
+}
+
+.name-left {
+    padding-left: 10px;
+    text-transform: capitalize;
+    font-weight: bold;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.number-right {
+    padding-right: 10px;
+    vertical-align: middle;
+    text-align: right;
+}
+
+.chat-flex-container {
+    height: 72%;
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    vertical-align: top;
+    float: left;
+}
+
+.chat-container {
+    width: 100%;
+    padding: 10px;
+    display: inline-block;
+}
+
+.reply-box {
+    height: 20%;
+    width: 100%;
+    float: left;
+}
+
+.reply-box textarea {
+    width: 100%;
+    height: 60%;
+    vertical-align: top;
+    float: left;
+    border: solid 1px gray;
+}
+
+.reply-box button {
+    background: #0085D1;
+    color: white;
+    border: none;
+    width: 100%;
+    height: 40%;
+    float: left;
+}
+
+.messages {
+    margin-top: 30px;
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    line-height: 1.6;
+    width: fit-content;
+}
+
+.time-sent {
+    font-size: 0.7rem;
+    color: white;
+    line-height: 40%;
+    text-align: right;
+}
+
+.time-received {
+    font-size: 0.7rem;
+    color: black;
+    line-height: 40%;
+    text-align: right;
+}
+
+.received {
+    float: left;
+    clear: both;
+    margin-right: 25%;
+    background-color: lightgrey;
+    position: relative;
+}
+
+.received :before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    bottom: 0;
+    left: -7px;
+    height: 20px;
+    width: 20px;
+    background: lightgrey;
+    border-bottom-right-radius: 15px;
+}
+
+.received :after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: -10px;
+    width: 10px;
+    height: 20px;
+    background: white;
+    border-bottom-right-radius: 10px;
+}
+
+.sent {
+    float: right;
+    clear: both;
+    text-align: left;
+    color: white;
+    margin-left: 25%;
+    background: #0085D1;
+    position: relative;
+}
+
+.sent :before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    bottom: 0;
+    right: -8px;
+    height: 20px;
+    width: 20px;
+    background: #0085D1;
+    border-bottom-left-radius: 15px;
+}
+
+.sent :after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    right: -10px;
+    width: 10px;
+    height: 20px;
+    background: white;
+    border-bottom-left-radius: 10px;
+}
+
+.new {
+    background: darkorange;
+    font-weight: bold;
+}
+
+.unread {
+    color: red;
+}

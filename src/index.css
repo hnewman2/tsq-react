@@ -1,0 +1,473 @@
+body {
+    /*  height: 90vh;*/
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+main {
+    height: 83.5vh;
+}
+
+
+/*Header*/
+
+.main-page-header {
+    width: 100%;
+    height: 16vh;
+}
+
+.header-menu-row {
+    width: 100%;
+    background-color: cadetblue;
+    height: 48%;
+}
+
+.header-title-row {
+    width: 100%;
+    height: 47%;
+    text-align: center;
+    /*padding-left: 5%;*/
+    background-color: rgb(111, 184, 187);
+    vertical-align: middle;
+}
+
+#header-title-row {
+    font-size: 2vw;
+}
+
+.header-menu {
+    float: right;
+    margin-top: 2vh;
+    margin-right: 3vh;
+}
+
+li {
+    display: inline-block;
+}
+
+.buttons,
+.buttons:hover {
+    text-decoration: none;
+    font-size: 20px;
+    color: white;
+    padding: 10px;
+    margin: 25px;
+}
+
+.tsq-logo {
+    width: 200px;
+    height: 150px;
+    /*float: left;*/
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 55% 55% 0 0;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+
+/*Login Page*/
+
+.login-form {
+    position: relative;
+    margin-right: 35%;
+    margin-left: 35%;
+    width: 30%;
+    margin-top: 3%;
+    padding: 10px;
+    font-size: 35px;
+    text-align: center;
+    height: 60%;
+}
+
+.login-button,
+.login-form input {
+    width: 100%;
+}
+
+
+/*Volunteer Keypad page*/
+
+.keypad-page-container {
+    display: inline-block;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    height: 90%;
+    margin-top: 3%;
+}
+
+.keypad-form {
+    font-size: 35px;
+    text-align: center;
+    /*position: relative;
+    margin-top: 8vh;
+    margin-left: 25vw;*/
+    width: 45%;
+    height: 95%;
+    float: right;
+}
+
+.keypad-form input {
+    font-size: 20px;
+    width: 22vw;
+}
+
+.keypad-form button {
+    height: 38px;
+    font-size: 20px;
+}
+
+.keypad-form h4,
+.keypad-numbers h4 {
+    font-size: 40px;
+}
+
+.keypad-numbers {
+    float: left;
+    height: 85%;
+    width: 35%;
+    /*margin-left: 2vw;
+    margin-top: 8vh;*/
+    font-size: 37px;
+    text-align: center;
+}
+
+.keypad-numbers form {
+    width: 100%;
+    height: 10%;
+}
+
+.keypad-numbers table {
+    width: 100%;
+    height: 80%;
+}
+
+.keypad-numbers input {
+    width: 85%;
+}
+
+.keypad-numbers form button {
+    width: 15%;
+}
+
+.keypad-numbers td {
+    text-align: center;
+    font-size: 35px;
+    width: 33.3%;
+}
+
+.keypad-numbers td button {
+    /*width: 7.5vw;
+    height: 15vh;*/
+    width: 100%;
+    height: 100%;
+}
+
+.keypad-numbers td button:active,
+.keypad-numbers form button:active,
+.keypad-form button:active {
+    background-color: lightsteelblue;
+}
+
+.add-new-vol-modal button {
+    float: right;
+}
+
+
+/*Vol info page*/
+
+.vol-info-table {
+    position: absolute;
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-top: 5%;
+    border-collapse: separate;
+    border-spacing: 15px;
+    font-size: 30px;
+}
+
+.vol-info-table td {
+    max-width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vol-info-table .column1 {
+    width: 20%;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.vol-info-table .column2 {
+    width: 80%;
+}
+
+.edit-info-row {
+    text-align: right;
+    vertical-align: bottom;
+}
+
+.select-route-dropdown {
+    font-size: 33px;
+}
+
+.checkout-route-btn {
+    width: 100%;
+    font-size: 33px;
+    line-height: 32px;
+}
+
+.edit-info-modal h4 {
+    text-align: center;
+}
+
+.edit-info-modal button {
+    float: right;
+}
+
+.route-info-modal {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.route-info-modal .alert {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+
+/*Upload Routes Page*/
+
+.upload-form {
+    height: 50%;
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-top: 8%;
+    font-size: 30px;
+    text-align: center;
+    background: lightgray;
+}
+
+.file-upload-button {
+    width: 75%;
+}
+
+.upload-form input {
+    width: 75%;
+    border: 2px solid darkgray;
+    background: white;
+}
+
+#uploadRoutesForm {
+    padding-top: 10%;
+    padding-bottom: 10%;
+}
+
+
+/*Admin Pages*/
+
+.update-vol-status-modal {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.update-vol-status-modal input {
+    width: 100%;
+}
+
+.update-vol-status-modal .btn {
+    margin-top: 4px;
+}
+
+
+/*Route History Page*/
+
+.view-logs {
+    margin-top: 3%;
+    height: 85%;
+    width: 65%;
+    margin-left: 17.5%;
+    margin-right: 17.5%;
+    text-align: center;
+}
+
+.route-history-table {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 85%;
+    width: 100%;
+    font-size: 20px;
+    border: solid 1px gray;
+    vertical-align: top;
+}
+
+.view-logs-header-table {
+    border-collapse: separate;
+    text-align: left;
+    vertical-align: bottom;
+    width: 100%;
+    height: 3%;
+    font-size: 20px;
+}
+
+.view-logs table thead {
+    width: 100%;
+}
+
+.vl5-left-align {
+    text-align: right;
+    padding-right: 15px;
+}
+
+.vl1 {
+    text-align: center;
+    font-weight: bold;
+}
+
+.vl1,
+.vl5 {
+    width: 11%;
+}
+
+.vl2,
+.vl3,
+.vl4 {
+    width: 26%;
+    text-align: left;
+}
+
+.vl5 {
+    text-align: right;
+}
+
+.table thead .vl5 {
+    padding-right: 25px;
+}
+
+.title-table {
+    background-color: darkgray;
+    height: 12%;
+    font-size: 25px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.volunteer-input {
+    text-transform: capitalize;
+    text-align: left;
+    height: 100%;
+}
+
+.date-input {
+    border: solid 1px rgb(155, 153, 153);
+    height: 100%;
+}
+
+.filter {
+    font-size: 25px;
+    width: 6%;
+}
+
+#routeNums {
+    height: 100%;
+}
+
+.filter-button {
+    text-align: right;
+}
+
+.clear-filter-button {
+    height: 100%;
+    float: right;
+}
+
+.routes-dropdown {
+    width: 27%;
+}
+
+
+/*across all pages*/
+
+.alert {
+    z-index: 2;
+    padding: 5px;
+    position: fixed;
+    margin: auto;
+    width: 100%;
+    top: 17vh;
+    font-size: 25px;
+    text-align: center;
+}
+
+textarea {
+    resize: none;
+}
+
+.confirm-modal-design {
+    text-align: center;
+    overflow: wrap;
+    width: 25vw;
+    font-size: 25px;
+}
+
+.confirm-modal-design p {
+    margin-top: 25px;
+}
+
+.shul-dropdown {
+    width: 26vw;
+}
+
+.table {
+    text-align: left;
+}
+
+.title-case {
+    text-transform: capitalize;
+}
+
+.unreadCount {
+    border-radius: 50%;
+    background-color: rgb(255, 0, 0);
+    color: white;
+    font-size: 17px;
+    text-align: center;
+    height: 25px;
+    width: 25px;
+}
+
+.routes-tables-container {
+    width: 50vw;
+    height: 70%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 4.5%;
+    vertical-align: top;
+    overflow: scroll;
+    overflow-x: hidden;
+    float: left;
+    border: solid 1px lightgray;
+}
+
+.pg-brk {
+    page-break-after: always;
+    width: 100%;
+    position: relative;
+}
+
+.contact-info-string {
+    vertical-align: bottom;
+    margin-bottom: 5px;
+}

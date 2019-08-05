@@ -1,0 +1,176 @@
+details {
+    border-radius: 3px;
+    background: #EEE;
+    margin: 1em 0;
+    width: 96%;
+    margin-left: 2%;
+    margin-right: 2%;
+    border: solid 1px lightgray;
+}
+
+summary {
+    border-radius: 3px;
+    padding: 5px 10px;
+    border: solid 1px lightgray;
+    height: 6vh;
+    font-size: 2.5vh;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
+    padding-left: 1vw;
+    padding-right: 1vw;
+}
+
+summary:focus {
+    outline: none;
+}
+
+summary:hover {
+    background-color: darkgray;
+}
+
+
+/* Style the summary when details box is open */
+
+details[open] summary {
+    background: rgba(23, 162, 183, 0.6);
+    color: white;
+}
+
+details[open] {
+    background: white;
+}
+
+.routes-tables-container {
+    width: 70%;
+    margin-top: 3%;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-bottom: 3vh;
+}
+
+.print-all {
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-top: 15px;
+}
+
+.print-all button {
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
+    font-size: 20px;
+}
+
+.print-btn {
+    float: right;
+    height: 4vh;
+    width: 6vw;
+    font-size: 1.8vh;
+}
+
+.memos {
+    width: 100%;
+    text-align: center;
+}
+
+.contact-info-string {
+    bottom: 0px;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.contact-info-string {
+    text-align: center;
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.contact-info-string a {
+    font-weight: bold;
+}
+
+.memos {
+    border: 1px dashed #a9a9a9;
+    margin-left: 2%;
+    margin-right: 2%;
+    width: 96%;
+    min-height: 15px;
+}
+
+.route-table {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.route-table th,
+.route-table td {
+    margin-bottom: 2vh;
+    border-bottom: 2px solid #ddd;
+    border-right: 1px dashed #ddd;
+    padding: .5% .5%;
+}
+
+.route-table td {
+    font-size: 16px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.route-table p {
+    margin-bottom: 3px;
+}
+
+.route-table-id {
+    font-size: 20px;
+    background-color: darkgray;
+}
+
+.route-table-header-row {
+    font-size: 16px;
+    background-color: lightgray;
+}
+
+.route-table-name {
+    width: 18%;
+    text-transform: capitalize;
+}
+
+.route-table-address {
+    width: 22%;
+    text-transform: capitalize;
+}
+
+.route-table-city {
+    width: 14%;
+    text-transform: capitalize;
+}
+
+.route-table-size {
+    width: 4%;
+    text-align: center;
+}
+
+.route-table-phone {
+    width: 12%;
+    text-align: center;
+}
+
+.route-table-notes {
+    width: 30%;
+}
+
+.route-table thead tr {
+    border-bottom: solid 3px darkgray;
+}
+
+.print-table {
+    transform: rotate(180deg);
+    position: relative;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+}

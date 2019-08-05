@@ -1,0 +1,42 @@
+.admin-home-table {
+    table-layout: fixed;
+    height: 40%;
+    width: 75%;
+    margin-left: 12.5%;
+    margin-right: 12.5%;
+    margin-top: 3%;
+    border-collapse: separate;
+    border-spacing: 15px;
+}
+
+.admin-home-link,
+.admin-home-button {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    background-color: rgb(111, 184, 187);
+    color: white;
+    border: none;
+    font-size: 2em;
+    text-decoration: none;
+    padding: 40px;
+}
+
+.admin-home-link {
+    vertical-align: middle;
+}
+
+.admin-home-table tr td {
+    width: 25vh;
+    min-height: 15vh;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.admin-home-button:hover,
+.admin-home-link:hover {
+    text-decoration: none;
+    background-color: lightslategray;
+    color: white;
+    border: none;
+}

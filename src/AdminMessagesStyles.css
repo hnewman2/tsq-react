@@ -1,0 +1,113 @@
+.admin-messages-container {
+    width: 80%;
+    height: 70%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 4.5%;
+    vertical-align: top;
+}
+
+.volunteer-container {
+    width: 100%;
+    height: 100%;
+    text-transform: capitalize;
+}
+
+.preset-table {
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    border-collapse: separate;
+    border-spacing: 10px;
+    margin-top: 5px;
+}
+
+.preset-table td {
+    width: 50%;
+}
+
+.preset-table button {
+    width: 100%;
+}
+
+.filter-container {
+    background-color: white;
+    height: 10%;
+    font-size: 20px;
+    padding: 2px;
+}
+
+.filter-options {
+    width: 100%;
+}
+
+.compose-cell {
+    text-align: right;
+}
+
+.messages-header-table {
+    width: 100%;
+    height: 10%;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 25px;
+    font-weight: 600;
+    background: grey;
+}
+
+.volunteer-message-table-container {
+    height: 80%;
+    width: 100%;
+    overflow: scroll;
+    overflow-x: hidden;
+    float: left;
+    vertical-align: top;
+    border: solid 1px lightgray;
+}
+
+#volunteer-message-table {
+    float: left;
+    vertical-align: top;
+    font-size: 20px;
+}
+
+#volunteer-message-table tr:hover {
+    background-color: darkgray;
+    cursor: pointer;
+}
+
+.vol-col {
+    width: 35%;
+    padding-left: .5%;
+}
+
+.route-col {
+    width: 18%;
+}
+
+.type-col {
+    width: 27%;
+}
+
+.message-col {
+    width: 20%;
+    text-align: right;
+    padding-right: 20px;
+}
+
+.filter-options {
+    vertical-align: middle;
+}
+
+.filter-cell {
+    text-align: left;
+}
+
+.buttons-cell {
+    text-align: right;
+}
+
+:disabled {
+    background-color: darkgray;
+    opacity: .5;
+}
