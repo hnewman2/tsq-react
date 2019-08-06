@@ -20,10 +20,11 @@ export default class AdminHome extends Component {
             showMemoModal: false,
             memos: [],
             selectedText: '',
-            currentMemos:[]
+            currentMemos: [],
+            memosToRemove: []
         }
         this.getPhone = this.getPhone.bind(this);
-        
+
     }
 
     componentDidMount() {
@@ -64,16 +65,16 @@ export default class AdminHome extends Component {
 
         return newPhone;
     }
-    getCurrentMemos(){
-        
-            fetch('/getTodaysMemos', {
-                method: 'POST'
-            }).then(response => {
-                response.json().then(data => {
-                    let list = data.map(m => <p><input type='checkbox' id={m.id} onChange={(e)=>this.onChangeCheckbox(e)}/><lable>{m.body}</lable></p>);
-                    this.setState({ currentMemos: list });
-                })
-            });
+    getCurrentMemos() {
+
+        fetch('/getTodaysMemos', {
+            method: 'POST'
+        }).then(response => {
+            response.json().then(data => {
+                let list = data.map(m => <p><input type='checkbox' id={m.id} onChange={(e) => this.onChangeCheckbox(e)} /><lable>{m.body}</lable></p>);
+                this.setState({ currentMemos: list });
+            })
+        });
     }
 
     getAllMemos() {
@@ -90,21 +91,34 @@ export default class AdminHome extends Component {
     onChangeUserID(selectedVal) {
         window.AdminHomeComponent.setState({ userID: selectedVal.key });
     }
-    onChangeCheckbox(e){
-        let m_ID=e.target.id;
+    onChangeCheckbox(e) {
+        let checked = e.target.checked;
+        let temp=this.state.memosToRemove;
+        if (checked){
+            temp.push(e.target.id);
+            this.setState({memosToRemove:temp});
+        }else{
+            let index= this.state.memosToRemove.indexOf(e.target.id);
+            temp.splice(index,1);
+            this.setState({memosToRemove:temp});
+        }
+    }
+
+    removeMemos(){
+
         fetch('/removeMemo', {
             method: 'POST',
-            body: m_ID,
-            headers: { "Content-Type": "text/plain" }
+            body: JSON.stringify({memos: this.state.memosToRemove}),
+            headers: { "Content-Type": "application/json" }
         }).then(response => {
-            if (response.status == 200)
+            if (response.status == 200){
                 this.setState({ statusMsg: <div class="alert alert-success" role="alert">message removed</div> });
+                this.getCurrentMemos();
+            }
             else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">error: message could not be removed</div> }) }
 
         });
-
     }
-
     getVolunteers() {
         fetch("/VolNameSearch", {
             method: "POST",
@@ -115,7 +129,7 @@ export default class AdminHome extends Component {
                     const items = data.map((item, i) => {
                         return {
                             // what to show to the user
-                            label: item.volunteer + ', ' + this.getPhone(item.phone),
+                            label: item.volunteer + ' ' + this.getPhone(item.phone),
                             // key to identify the item within the array
                             key: item.phone,
                         }
@@ -125,8 +139,6 @@ export default class AdminHome extends Component {
             }
         });
     }
-
-
 
     onClickUpdate() {
 
@@ -154,17 +166,20 @@ export default class AdminHome extends Component {
     }
     onChangeMemo(e) {
 
-        let selected = e.target.id;
-        console.log(selected);
+        let selected = document.getElementById("select");
+        selected = selected[selected.selectedIndex].id;
+
         this.setState({ selectedText: selected });
     }
-    onClickSelect(){
+    onClickSelect() {
+
+        console.log(this.state.selectedText);
         fetch('/updateMemo', {
             method: 'POST',
             body: this.state.selectedText,
             headers: { "Content-Type": "text/plain" }
         }).then(response => {
-            if (response.status == 200){
+            if (response.status == 200) {
                 this.setState({ statusMsg: <div class="alert alert-success" role="alert">message added!</div> });
                 this.getCurrentMemos();
             }
@@ -176,15 +191,15 @@ export default class AdminHome extends Component {
     onClickAdd(e) {
         e.preventDefault();
 
-        let bodyText=  document.getElementById('new-message').value;
+        let bodyText = document.getElementById('new-message').value;
         console.log(bodyText);
 
         fetch('/addMemo', {
             method: 'POST',
-            body:bodyText,
+            body: bodyText,
             headers: { "Content-Type": "text/plain" }
         }).then(response => {
-            if (response.status == 200){
+            if (response.status == 200) {
                 this.setState({ statusMsg: <div class="alert alert-success" role="alert">message added!</div> });
                 this.getCurrentMemos();
             }
@@ -260,7 +275,7 @@ export default class AdminHome extends Component {
                     onClose={() => this.setState({ showMemoModal: false })}>
                     <div class='update-vol-status-modal'>
                         <h4>Choose a memo or create a new one</h4><br />
-                        <select onChange={event => this.onChangeMemo(event)}>
+                        <select id="select" onChange={event => this.onChangeMemo(event)}>
                             <option>&nbsp;</option>
                             {this.state.memos}
                         </select> <button class='btn btn-info btn-sm' onClick={(event) => this.onClickSelect(event)}>select</button>
@@ -269,14 +284,12 @@ export default class AdminHome extends Component {
 
                         <button class='btn btn-info btn-sm' onClick={(event) => this.onClickAdd(event)}>Add</button>&nbsp;
                         <button class='btn btn-secondary btn-sm' onClick={() => this.setState({ showMemoModal: false })}>Cancel</button>
-                        
-
 
                     </div>
                     <div>
                         <h6>select memos to remove</h6>
                         {this.state.currentMemos}
-                        <button onClick={()=>{this.setState({showMemoModal:false}); this.getCurrentMemos();}}>remove</button>
+                        <button onClick={() => this.removeMemos()}>remove</button>
                     </div>
 
 

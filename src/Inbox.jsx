@@ -9,6 +9,7 @@ export default class Inbox extends Component {
 
     constructor(props) {
         super(props);
+        window.InboxComponent = this;
         this.state = {
             loggedIn: true,
             selectedContact: '',
@@ -127,8 +128,6 @@ export default class Inbox extends Component {
             if (response.status === 200) {
                 response.json().then(data => {
                     data.sort((a, b) => (a.DateCreated > b.DateCreated) ? 1 : -1);
-                    console.log(data[0].DateSent);
-                    console.log(data);
 
                     data.forEach(i => {
                         if (i.readStatus == 1) {
@@ -181,7 +180,7 @@ export default class Inbox extends Component {
             }
         })
     }
-    
+
     componentDidMount() {
         fetch("/authorizeAdmin", {
             method: "POST",
@@ -238,11 +237,9 @@ export default class Inbox extends Component {
     }
     onClickContact(e) {
 
-
-
         let from = e.target.id;
         let fromName = document.getElementById(from).innerHTML;
-          console.log("document.getelement.id("+ from+ ").innerHTML: "+ fromName );
+
         if (fromName === this.getPhone(from)) {
             fromName = '';
         }
@@ -272,7 +269,7 @@ export default class Inbox extends Component {
         if (this.state.body.length > 0) {
             fetch('/sendText', {
                 method: 'POST',
-                body: JSON.stringify({ recipients: to, subject: this.state.subject, body: this.state.body}),
+                body: JSON.stringify({ recipients: to, subject: this.state.subject, body: this.state.body }),
                 headers: { "Content-Type": "application/json" }
             }).then(response => {
                 if (response.status === 200) {
@@ -338,10 +335,13 @@ export default class Inbox extends Component {
         return newPhone;
     }
 
-    onChangeContactSearch(selectedContact){
+    onChangeContactSearch(selectedContact) {
         var element = document.getElementById(selectedContact.key);
-        if(element){
-            element.scrollIntoView({block: "start", inline: "nearest"});
+        if (element) {
+            element.scrollIntoView({ block: "start", inline: "nearest" });
+            element.click();
+        }else{
+            window.InboxComponent.setState({selectedContact:'', messages:'', contactName: 'No recent conversations found'});
         }
     }
 
@@ -361,15 +361,18 @@ export default class Inbox extends Component {
                         &#10227;
                         </button>
                     <div class='inbox-container'>
-
                         <div class='contacts-container'>
-                            <div class='search-contacts-container'><DataListInput inputClassName={'contact-search'} itemClassName={'volunteer-input'}
-                            dropDownLength={'6'} placeholder={'Search Contacts...'} items={this.state.volNames} onSelect={this.onChangeContactSearch} /></div>
-                            <table class='contacts-table'>
-                                {this.state.contactsList}
-                            </table>
+                            <div class='search-contacts-container'>
+                                <DataListInput inputClassName={'contact-search'} itemClassName={'volunteer-input'}
+                                dropDownLength={'6'} placeholder={'Search Contacts...'} items={this.state.volNames}
+                                dropdownClassName={/*'contact-search'*/''} onSelect={this.onChangeContactSearch} />
+                            </div>
+                            <div class='contacts-scroll-container'>
+                                <table class='contacts-table'>
+                                    {this.state.contactsList}
+                                </table>
+                            </div>
                         </div>
-
                         <div class='messages-container'>
                             <table class='number'>
                                 <tr>

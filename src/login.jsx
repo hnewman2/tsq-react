@@ -26,9 +26,13 @@ export default class Login extends Component{
             loggedIn: false, 
             errorMsg: '',
             admin: props.admin,
+            resetPass: false,
+            newPass: '',
+            confirmPass: '',
         };   
 
         this.handleLogin = this.handleLogin.bind(this);
+        this.handleResetPass = this.handleResetPass.bind(this);
 
 
     }
@@ -72,12 +76,52 @@ export default class Login extends Component{
         });
     }
 
+    handleResetPass(event){
+        event.preventDefault();
+        if(this.state.newPass === this.state.confirmPass){
+            fetch("/resetPassword",{
+                method: "POST",
+                body: JSON.stringify(this.state),
+                headers: {"Content-Type": "application/json"}
+            }).then(response => {
+                //check if response is valid
+                if(response.status === 200) {
+                    this.setState({
+                        errorMsg: <div class="alert alert-success" role="alert">Password updated successfully. Please Login to continue</div>,
+                        resetPass: false,
+                    });
+                }else{
+                    this.setState({errorMsg: <div class="alert alert-danger" role="alert">Error... Unable to reset password</div>});
+                }
+            });
+
+        }else{
+            this.setState({
+                errorMsg: <div class="alert alert-danger" role="alert">Passwords Must Match</div>
+            });
+        }
+    }
+
+
     onChangeUserName(event){
         this.setState({ userName: event.target.value});
     } 
 
     onChangePass(event){
         this.setState({ password: event.target.value});
+    }
+
+    onChangeNewPass(event){
+        this.setState({ newPass: event.target.value});
+    }
+
+    onChangeConfirmPass(event){
+        this.setState({ confirmPass: event.target.value});
+    }
+
+    onClickResetPass(){
+        console.log('about to reset password');
+        this.setState({resetPass: true});
     }
 
     render() {
@@ -91,6 +135,23 @@ export default class Login extends Component{
                 return(<Redirect to='/keyPad'/> );
             }
         }
+        else if(this.state.resetPass){
+            return(
+            <Fragment>            
+                {this.state.errorMsg}
+                <form onSubmit= {this.handleResetPass} class='login-form'>                    
+                        <label>Username:</label><br/>
+                        <input type= "text" name="userName" onChange ={event=> this.onChangeUserName(event)} required/><br/><br/>
+                        <label>Old Password:</label><br/>
+                        <input type="password"  onChange = {event=> this.onChangePass(event)} required/><br/><br/>
+                        <label>New Password:</label><br/>
+                        <input type="password"  onChange = {event=> this.onChangeNewPass(event)} required/><br/><br/>
+                        <label>Confirm Password:</label><br/>
+                        <input type="password"  onChange = {event=> this.onChangeConfirmPass(event)} required/><br/><br/>
+                        <input type= 'submit' value='Reset' class='login-button'/>
+                </form>
+                </Fragment>);
+        }
         else{
             return( 
                 <Fragment>            
@@ -102,6 +163,7 @@ export default class Login extends Component{
                         <input type="password" name="password" onChange = {event=> this.onChangePass(event)} required/><br/><br/>
                         <input type= 'submit' value='Login' class='login-button'/>
                 </form>
+                <button onClick={()=> this.onClickResetPass()}>Reset Password</button>
                 </Fragment>
 
             );
