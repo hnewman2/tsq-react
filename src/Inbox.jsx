@@ -126,8 +126,10 @@ export default class Inbox extends Component {
             //check if response is valid
             if (response.status === 200) {
                 response.json().then(data => {
-                    data.sort((a, b) => (a.DateSent > b.DateSent) ? 1 : -1);
-                    console.log(data[0].dateSent)
+                    data.sort((a, b) => (a.DateCreated > b.DateCreated) ? 1 : -1);
+                    console.log(data[0].DateSent);
+                    console.log(data);
+
                     data.forEach(i => {
                         if (i.readStatus == 1) {
                             rDivClass = ' new';
@@ -142,7 +144,7 @@ export default class Inbox extends Component {
                         }
 
                         mBody = i.Body;
-                        this.fillMessages(mDivClass, mBody, tDivClass, this.getDate(i.DateSent));
+                        this.fillMessages(mDivClass, mBody, tDivClass, this.getDate(i.DateCreated));
                         rDivClass = '';
                     });
                     this.setState({ messages: this.state.tempMessages, showMessages: true, statusMsg: '', tempMessages: [] });
