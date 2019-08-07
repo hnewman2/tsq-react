@@ -8,7 +8,7 @@ import VolInfo from './volInfo';
 import ViewLogs from './viewLogs';
 import AdminMessages from './AdminMessages';
 import ViewStatus from './viewStatus';
-import Contacts from './Inbox';
+import Inbox from './Inbox';
 import RoutesPrintout from './RoutesPrintout';
 
 const Main = (props) => (
@@ -46,13 +46,14 @@ const Main = (props) => (
                 setHeaderTitle={props.setHeaderTitle} />} />
             <Route path='/viewStatus' render={() => <ViewStatus setAdmin={props.setAdmin}
                 setHeaderTitle={props.setHeaderTitle} />} />
-            <Route path='/smsInbox' render={() => <Contacts setSelectedContact={props.setSelectedContact}
+            <Route path='/smsInbox' render={() => <Inbox setSelectedContact={props.setSelectedContact}
                 setAdmin={props.setAdmin}
                 setHeaderTitle={props.setHeaderTitle} 
                 resetUnread={props.resetUnread}
                 />} />
             <Route path='/RoutesPrintout' render= {()=>
-                <RoutesPrintout setHeaderTitle={props.setHeaderTitle}/>}  />
+                <RoutesPrintout setHeaderTitle={props.setHeaderTitle}
+                setAdmin={props.setAdmin}/>}  />
             
            
         </Switch>

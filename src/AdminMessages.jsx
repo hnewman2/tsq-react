@@ -35,7 +35,7 @@ export default class AdminMessages extends Component {
         this.getDate = this.getDate.bind(this);
         this.setRecipients = this.setRecipients.bind(this);
         this.messageModal = this.messageModal.bind(this);
-       this.eventSource2 = new EventSource('/messageStatus');
+        this.eventSource2 = new EventSource('/messageStatus');
     }
 
     componentDidMount() {
@@ -63,19 +63,19 @@ export default class AdminMessages extends Component {
         this.getVolunteers('DEV', '');
         this.getVolunteerTypes();
 
-       this.eventSource2.addEventListener('status', () => {
+        this.eventSource2.addEventListener('status', () => {
             this.addSent();
         });
     }
 
- addSent() {
-      
+    addSent() {
+
 
         fetch("/addSent", {
             method: "POST",
             headers: { "Content-Type": "text/plain" }
         })
-       
+
     }
     getVolunteerTypes() {
         fetch('/getVolunteerTypes', {
@@ -181,12 +181,12 @@ export default class AdminMessages extends Component {
                 }
             }
         });
-        let recipientContacts='';
+        let recipientContacts = '';
         recipientsFiltered.forEach(v => {
-            if(text) {
-                recipientContacts = recipientContacts.concat(v.phone +', ');
-            }else{
-                recipientContacts = recipientContacts.concat(v.email +', ');
+            if (text) {
+                recipientContacts = recipientContacts.concat(v.phone + ', ');
+            } else {
+                recipientContacts = recipientContacts.concat(v.email + ', ');
             }
         });
         this.setState({
@@ -308,16 +308,16 @@ export default class AdminMessages extends Component {
         }
 
         //set sms recipients and set email recipients 
-        let recipientsSMS ='';
+        let recipientsSMS = '';
         let recipientsEmail = '';
         var emailSuccess = false;
         var textSuccess = false;
         this.state.allVolunteersAndRecipients.forEach(vol => {
             if (vol.sendSMS) {
-                recipientsSMS = recipientsSMS.concat(vol.phone+' ,');
+                recipientsSMS = recipientsSMS.concat(vol.phone + ' ,');
             }
-           else if (vol.sendEmail && vol.email && vol.email.length > 0) {
-                recipientsEmail = recipientsEmail.concat(vol.email+' ,')
+            else if (vol.sendEmail && vol.email && vol.email.length > 0) {
+                recipientsEmail = recipientsEmail.concat(vol.email + ' ,')
             }
         });
 
@@ -456,7 +456,7 @@ export default class AdminMessages extends Component {
                                         selectedRoute={(route) => this.onFilterByRoute(route)} />&nbsp;
                                     <select id='volTypes' onChange={(event) => this.onFilterByVolunteerType(event)}>
                                         <option value='developers'>Developer</option>
-                                        <option value='allVolsAndRec'>All Volunteers &amp; Recipients</option>
+                                        <option value='allVolsAndRec'>All Volunteers &amp; Pickups</option>
                                         <option value='allVols'>All Volunteers</option>
                                         {filterByVolunteerType}
                                     </select>

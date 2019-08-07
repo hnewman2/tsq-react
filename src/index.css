@@ -87,10 +87,27 @@ li {
 }
 
 .login-button,
-.login-form input {
+.login-form input,
+.reset-pass-form input {
     width: 100%;
 }
 
+.reset-pass-button {
+    float: right;
+    margin-top: 5px;
+}
+
+.reset-pass-form {
+    position: relative;
+    margin-right: 35%;
+    margin-left: 35%;
+    width: 30%;
+    margin-top: 3%;
+    padding: 10px;
+    font-size: 20px;
+    text-align: center;
+    height: 60%;
+}
 
 /*Volunteer Keypad page*/
 
@@ -180,6 +197,19 @@ li {
     float: right;
 }
 
+.add-new-vol-modal table{
+    width: 100%;
+}
+
+.vol-types-checkboxes {
+    width: 50%;
+    font-weight: 700;
+    border: 1px dashed gray;
+    padding-left: 5px;
+}
+.check-box-labels-not-bold {
+    font-weight: normal;
+}
 
 /*Vol info page*/
 
@@ -446,6 +476,10 @@ textarea {
     text-align: center;
     height: 25px;
     width: 25px;
+}
+
+.unreadCount:hover {
+    cursor: pointer;
 }
 
 .routes-tables-container {

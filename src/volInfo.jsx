@@ -41,6 +41,7 @@ export default class VolInfo extends Component {
             sendEmail: this.props.currentVolunteer.sendEmail,
             shul_ID: this.props.currentVolunteer.shul_ID,
             primaryRouteID: this.props.currentVolunteer.primaryRouteID,
+            currentVolTypes: [],
 
             resetEmail: false,
             password: '',
@@ -49,6 +50,8 @@ export default class VolInfo extends Component {
         this.setUpRoutesTable = this.setUpRoutesTable.bind(this);
         this.checkOutRoute = this.checkOutRoute.bind(this);
         this.getPhone = this.getPhone.bind(this);
+        this.getVolunteerTypes = this.getVolunteerTypes.bind(this);
+        this.getCurrentVolTypes = this.getCurrentVolTypes.bind(this);
 
     }
     componentDidMount() {
@@ -70,7 +73,52 @@ export default class VolInfo extends Component {
                 this.setState({ loggedIn: false });
             }
         });
+
+        this.getVolunteerTypes();
+        this.getCurrentVolTypes();
     }
+
+    getCurrentVolTypes(){
+        fetch('/getCurrVolunteerTypes', {
+            method: 'POST',
+            body: this.state.vol_ID,
+            headers: { "Content-Type": "text/plain" }
+        }).then(response => {
+                response.json().then(data => {
+                    let list = data.map(v=>
+                       v.type_ID);
+                    this.setState({
+                        currentVolTypes: list
+                    });
+                })
+            });
+    }
+
+    getVolunteerTypes() {
+        fetch('/getVolunteerTypes', {
+            method: 'POST'
+        })
+            .then(response => {
+                response.json().then(data => {
+                    let list = data.map(v=>
+                        <Fragment >
+                        <label class='check-box-labels-not-bold'><input type='checkbox' defaultChecked={()=>this.hasVolType(v.type_ID)} id={v.type_ID} onChange={(e) => this.onChangeVolTypeCheckbox(e)}/>{v.typeDescription}</label>&nbsp;&nbsp;</Fragment>
+                        );
+                    this.setState({
+                        volTypes: list
+                    });
+                })
+            });
+    }
+
+    hasVolType(type_ID){
+        if(this.state.currentVolTypes.indexOf(type_ID)>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     onChangeRoute(value) {
         this.setState({ currentRoute: value });
     }
@@ -405,6 +453,7 @@ export default class VolInfo extends Component {
                                         onChange={(event) => this.onChangeFirstName(event)}
                                         defaultValue={this.props.currentVolunteer.firstName}
                                     /></td>
+                                    <td rowspan='6' class='vol-types-checkboxes'>Volunteer Type:<br/>{this.state.volTypes}</td>
                                 </tr>
                                 <tr>
                                     <td class='column1'>Last Name: </td>

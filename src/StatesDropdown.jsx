@@ -34,7 +34,6 @@ selected route to be passed to the parent component
     render() {
 
         let stateVal = this.props.defaultStateVal; 
-        console.log(stateVal);
 
         let options = this.state.states.map(s =>
             s.state_ID == stateVal?

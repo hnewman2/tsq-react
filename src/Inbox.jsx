@@ -285,6 +285,12 @@ export default class Inbox extends Component {
         }
     }
     onClickRefresh() {
+
+        let cb=()=> {
+            this.getContacts();
+            this.getMessages();
+        }
+
         this.setState({
             statusMsg: <div class="alert alert-secondary"
                 role="alert">Loading SMS Inbox...</div>
@@ -294,7 +300,7 @@ export default class Inbox extends Component {
             method: "Post"
         }).then(response => {
             console.log(response.status);
-            this.setState({ showMessages: false }, this.getMessages);
+            this.setState({ showMessages: false }, cb);
         });
 
     }

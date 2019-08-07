@@ -106,16 +106,18 @@ export default class AdminHome extends Component {
 
     removeMemos(){
 
+
+
         fetch('/removeMemo', {
             method: 'POST',
             body: JSON.stringify({memos: this.state.memosToRemove}),
             headers: { "Content-Type": "application/json" }
         }).then(response => {
             if (response.status == 200){
-                this.setState({ statusMsg: <div class="alert alert-success" role="alert">message removed</div> });
+                this.setState({ statusMsg: <div class="alert alert-success" role="alert">message removed</div>, memosToRemove:[]});
                 this.getCurrentMemos();
             }
-            else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">error: message could not be removed</div> }) }
+            else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">error: message could not be removed</div> , memosToRemove:[]}) }
 
         });
     }
@@ -168,6 +170,7 @@ export default class AdminHome extends Component {
 
         let selected = document.getElementById("select");
         selected = selected[selected.selectedIndex].id;
+        
 
         this.setState({ selectedText: selected });
     }

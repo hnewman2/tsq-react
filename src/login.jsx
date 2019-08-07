@@ -120,7 +120,6 @@ export default class Login extends Component{
     }
 
     onClickResetPass(){
-        console.log('about to reset password');
         this.setState({resetPass: true});
     }
 
@@ -139,7 +138,9 @@ export default class Login extends Component{
             return(
             <Fragment>            
                 {this.state.errorMsg}
-                <form onSubmit= {this.handleResetPass} class='login-form'>                    
+                <div class='reset-pass-form'>
+                <form onSubmit= {this.handleResetPass} >
+                        <h3>Reset Password</h3><br/>                    
                         <label>Username:</label><br/>
                         <input type= "text" name="userName" onChange ={event=> this.onChangeUserName(event)} required/><br/><br/>
                         <label>Old Password:</label><br/>
@@ -148,22 +149,27 @@ export default class Login extends Component{
                         <input type="password"  onChange = {event=> this.onChangeNewPass(event)} required/><br/><br/>
                         <label>Confirm Password:</label><br/>
                         <input type="password"  onChange = {event=> this.onChangeConfirmPass(event)} required/><br/><br/>
-                        <input type= 'submit' value='Reset' class='login-button'/>
+                        <input type= 'submit' value='Reset' class='login-button btn btn-lg btn-info'/>
                 </form>
+                <button onClick={()=> this.setState({resetPass:false})} class='reset-pass-button btn btn-sm btn-secondary'>Return to Login</button>
+                
+                </div>
                 </Fragment>);
         }
         else{
             return( 
                 <Fragment>            
                 {this.state.errorMsg}
-                <form onSubmit= {this.handleLogin} class='login-form'>                    
+                <div class='login-form'>
+                <form onSubmit= {this.handleLogin} >                    
                         <label>Username:</label><br/>
                         <input type= "text" name="userName" onChange ={event=> this.onChangeUserName(event)} required/><br/><br/>
                         <label>Password:</label><br/>
                         <input type="password" name="password" onChange = {event=> this.onChangePass(event)} required/><br/><br/>
-                        <input type= 'submit' value='Login' class='login-button'/>
+                        <input type= 'submit' value='Login' class='login-button btn btn-lg btn-info'/>
                 </form>
-                <button onClick={()=> this.onClickResetPass()}>Reset Password</button>
+                <button onClick={()=> this.onClickResetPass()} class='reset-pass-button btn btn-sm btn-secondary'>Reset Password</button>
+                </div>
                 </Fragment>
 
             );

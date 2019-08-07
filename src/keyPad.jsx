@@ -39,10 +39,13 @@ export default class KeyPad extends Component {
             primaryRouteID: '-1',
             shul_ID: '12',
             phoneNumber: '',
+            selectedVolTypes: [],
+            volTypes: []
         };
 
         this.createKeyPad = this.createKeyPad.bind(this);
         this.logUserIn = this.logUserIn.bind(this);
+        this.getVolunteerTypes = this.getVolunteerTypes.bind(this);
     }
 
     componentDidMount() {
@@ -65,6 +68,38 @@ export default class KeyPad extends Component {
                 this.setState({ loggedIn: false });
             }
         });
+
+        this.getVolunteerTypes();
+    }
+
+    getVolunteerTypes() {
+        fetch('/getVolunteerTypes', {
+            method: 'POST'
+        })
+            .then(response => {
+                response.json().then(data => {
+                    let list = data.map(v=>
+                        <Fragment >
+                        <label class='check-box-labels-not-bold'><input type='checkbox' id={v.type_ID} onChange={(e) => this.onChangeVolTypeCheckbox(e)}/>{v.typeDescription}</label>&nbsp;&nbsp;</Fragment>
+                        );
+                    this.setState({
+                        volTypes: list
+                    });
+                })
+            });
+    }
+
+    onChangeVolTypeCheckbox(e){
+        let checked = e.target.checked;
+        let temp=this.state.selectedVolTypes;
+        if (checked){
+            temp.push(e.target.id);
+            this.setState({selectedVolTypes:temp});
+        }else{
+            let index= this.state.selectedVolTypes.indexOf(e.target.id);
+            temp.splice(index,1);
+            this.setState({selectedVolTypes:temp});
+        }
     }
 
     createKeyPad() {
@@ -329,6 +364,7 @@ export default class KeyPad extends Component {
                                             id="firstName"
                                             onChange={(event) => this.onChangeFirstName(event)}
                                         /></td>
+                                        <td rowspan='6' class='vol-types-checkboxes'>Volunteer Type:<br/>{this.state.volTypes}</td>
                                     </tr>
                                     <tr>
                                         <td class='column1'>Last Name: </td>

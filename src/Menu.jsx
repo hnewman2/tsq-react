@@ -41,7 +41,7 @@ export default class Menu extends Component
                             </li>
                             <li>
                                 <Link to='/AdminHome' class='buttons'>Admin </Link>
-                                <label class='unreadCount'>{this.props.unreadCount}</label>
+                              <a href='/smsInbox'>  <label class='unreadCount'>{this.props.unreadCount}</label></a>
                             </li>
 
                         </ul>

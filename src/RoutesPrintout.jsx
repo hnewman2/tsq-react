@@ -3,6 +3,7 @@ import { Component, Fragment } from 'react';
 import PrintComponents from 'react-print-components';
 import './RoutesPrintoutStyles.css';
 import Cookies from 'js-cookie';
+import { Redirect } from 'react-router-dom';
 
 export default class AdminHome extends Component {
 
@@ -15,7 +16,8 @@ export default class AdminHome extends Component {
             gotInfo: false,
             gotRoutes: false,
             routeTablesDetails: [],
-            memos: []
+            memos: [],
+            loggedIn: true,
 
         }
         this.setupRouteTables = this.setupRouteTables.bind(this);
@@ -221,6 +223,11 @@ export default class AdminHome extends Component {
     }
 
     render() {
+        if (!this.state.loggedIn) {
+            this.props.setAdmin();
+            return <Redirect to="/signIn" />;
+        }
+
         return (
             <Fragment>
                 <div class='routes-tables-container'>
