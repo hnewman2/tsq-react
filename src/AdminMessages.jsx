@@ -6,12 +6,14 @@ import { Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import './AdminMessagesStyles.css';
 import Modal from 'react-responsive-modal';
+import DataListInput from 'react-datalist-input';
 
 
 export default class AdminMessages extends Component {
 
     constructor(props) {
         super(props);
+        window.AdminMessagesComponent = this;
 
         this.state = {
             loggedIn: true,
@@ -28,6 +30,7 @@ export default class AdminMessages extends Component {
             recipientsFilled: false,
             statusMsg: '',
             password: '',
+            volNames: []
         };
 
         this.getVolunteers = this.getVolunteers.bind(this);
@@ -58,13 +61,36 @@ export default class AdminMessages extends Component {
                 this.setState({ loggedIn: false });
             }
         });
-        // this.getVolunteers('AndRecipients', '');
+        this.getVolunteers('AndRecipients', '');
         //for dev purposes only: (in production comment out below line and uncomment above line)
-        this.getVolunteers('DEV', '');
+        //this.getVolunteers('DEV', '');
         this.getVolunteerTypes();
+        this.getVolunteerNames();
 
         this.eventSource2.addEventListener('status', () => {
             this.addSent();
+        });
+    }
+
+
+    getVolunteerNames() {
+        fetch("/VolNameSearch", {
+            method: "POST",
+        }).then(response => {
+            if (response.status === 200) {
+                response.json().then(data => {
+
+                    const items = data.map((item, i) => {
+                        return {
+                            // what to show to the user
+                            label: item.volunteer,
+                            // key to identify the item within the array
+                            key: item.phone,
+                        }
+                    });
+                    this.setState({ volNames: items });
+                });
+            }
         });
     }
 
@@ -146,6 +172,19 @@ export default class AdminMessages extends Component {
         else {
             this.getVolunteers('FilterByVolType', volType);
         }
+    }
+
+    onClickFilterByVol(selected){
+        //toggle the other filter to display 'all'
+        let routeNums = document.getElementById('routeNums');
+        routeNums.options[0].selected = true;
+
+        let volTypes = document.getElementById('volTypes');
+        volTypes.options[0].selected = true;
+
+        var volPhone = selected.key;
+        
+        window.AdminMessagesComponent.getVolunteers('FilterByVolName', volPhone);
     }
 
     //getDate and setRecipients//
@@ -449,18 +488,27 @@ export default class AdminMessages extends Component {
                     <div class='volunteer-container'>
                         <div class='filter-container'>
                             <table class='filter-options'>
-                                <td class='filter-cell'>Filter:&nbsp;
-                                    <RoutesDropdown
+                                <td class='filter-cell'>Filter:</td>
+                                
+                                 <td class='fcroutes'>   <RoutesDropdown
                                         id={'routeNums'}
                                         optional={{ val: 'allRoutes', text: 'All Routes' }}
-                                        selectedRoute={(route) => this.onFilterByRoute(route)} />&nbsp;
-                                    <select id='volTypes' onChange={(event) => this.onFilterByVolunteerType(event)}>
-                                        <option value='developers'>Developer</option>
+                                        selectedRoute={(route) => this.onFilterByRoute(route)} />
+                                        </td>
+                                   <td class='fcvoltypes'> <select id='volTypes' onChange={(event) => this.onFilterByVolunteerType(event)}>
                                         <option value='allVolsAndRec'>All Volunteers &amp; Pickups</option>
                                         <option value='allVols'>All Volunteers</option>
+                                        <option value='developers'>Developer</option>
                                         {filterByVolunteerType}
-                                    </select>
-                                    &nbsp;
+                                    </select></td>
+                                   <td class='fcvolnames'> <DataListInput
+                                        inputClassName={'searchVolsMessagePg'}
+                                        itemClassName={'searchVolsMessagePg'}
+                                        dropDownLength={'8'}
+                                        placeholder={'Search Volunteers...'}
+                                        items={this.state.volNames}
+                                        onSelect={this.onClickFilterByVol} /></td>
+                                  <td class='fcbuttons'>
                                     <button title='Send text to volunteers displayed below' onClick={() => this.onClickSendTextToAll()}>&#128241;</button>
                                     &nbsp;
                                     <button title='Send email to volunteers displayed below' onClick={() => this.onClickSendEmailToAll()}>&#9993;</button>

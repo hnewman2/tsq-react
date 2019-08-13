@@ -41,10 +41,6 @@
     width: 100%;
 }
 
-.compose-cell {
-    text-align: right;
-}
-
 .messages-header-table {
     width: 100%;
     height: 10%;
@@ -99,8 +95,37 @@
     vertical-align: middle;
 }
 
-.filter-cell {
+.compose-cell {
+    text-align: right;
+    width: 45%;
+}
+
+.filter-cell,
+.fcroutes,
+.fcvoltypes,
+.fcvolnames,
+.fcbuttons {
     text-align: left;
+}
+
+.filter-cell {
+    width: 5%;
+}
+
+.fcroutes {
+    width: 7%
+}
+
+.fcvoltypes {
+    width: 15%;
+}
+
+.fcvolnames {
+    width: 18%;
+}
+
+.fcbuttons {
+    width: 10%;
 }
 
 .buttons-cell {
@@ -110,4 +135,9 @@
 :disabled {
     background-color: darkgray;
     opacity: .5;
+}
+
+.searchVolsMessagePg {
+    text-transform: capitalize;
+    text-align: left;
 }

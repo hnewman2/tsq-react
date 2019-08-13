@@ -10,13 +10,16 @@ import AdminMessages from './AdminMessages';
 import ViewStatus from './viewStatus';
 import Inbox from './Inbox';
 import RoutesPrintout from './RoutesPrintout';
+import SearchRecipients from './searchRecipients';
+import EditAllVolInfo from './editAllVolInfo';
+
 
 const Main = (props) => (
     <main>
         <Switch>
             <Route exact path='/' render={() => (
                 <Redirect to='/signIn' />
-            )}/>
+            )} />
             <Route path='/signIn' render={() => <Login admin={props.admin}
                 setHeaderTitle={props.setHeaderTitle}
                 resetAdmin={props.resetAdmin}
@@ -31,8 +34,8 @@ const Main = (props) => (
             <Route path='/keyPad' render={() => <KeyPad setAdmin={props.setAdmin}
                 resetAdmin={props.resetAdmin}
                 setCurrentVolunteer={props.setCurrentVolunteer}
-                setHeaderTitle={props.setHeaderTitle} 
-                />} />
+                setHeaderTitle={props.setHeaderTitle}
+            />} />
             <Route path='/AdminHome' render={() => <AdminHome setAdmin={props.setAdmin}
                 setHeaderTitle={props.setHeaderTitle} />} />
             <Route path='/volInfo' render={() => <VolInfo currentVolunteer={props.currentVolunteer}
@@ -48,14 +51,23 @@ const Main = (props) => (
                 setHeaderTitle={props.setHeaderTitle} />} />
             <Route path='/smsInbox' render={() => <Inbox setSelectedContact={props.setSelectedContact}
                 setAdmin={props.setAdmin}
-                setHeaderTitle={props.setHeaderTitle} 
+                setHeaderTitle={props.setHeaderTitle}
                 resetUnread={props.resetUnread}
-                />} />
-            <Route path='/RoutesPrintout' render= {()=>
+            />} />
+            <Route path='/RoutesPrintout' render={() =>
                 <RoutesPrintout setHeaderTitle={props.setHeaderTitle}
-                setAdmin={props.setAdmin}/>}  />
-            
-           
+                    setAdmin={props.setAdmin} />} />
+            <Route path='/SearchRecipients' render={() => <SearchRecipients
+                setHeaderTitle={props.setHeaderTitle}
+                setAdmin={props.setAdmin}
+            />} />
+            <Route path='/editAllVolInfo' render={()=><EditAllVolInfo
+              setHeaderTitle={props.setHeaderTitle}
+              setAdmin={props.setAdmin}
+          />
+            }/>
+
+
         </Switch>
     </main>
 );

@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import MessageModal from './MessageModal';
 import DataListInput from 'react-datalist-input';
+import PrintComponents from 'react-print-components';
 
 export default class ViewLogs extends Component {
 
@@ -64,6 +65,7 @@ export default class ViewLogs extends Component {
     }
 
     getHistory(path, body) {
+        let tableClass='';
         fetch("/routeHistory" + path, {
             method: "POST",
             body: body,
@@ -72,7 +74,8 @@ export default class ViewLogs extends Component {
             if (response.status === 200) {
                 response.json().then(data => {
                     var list = data.map(
-                        i => <tr>
+                        i =>
+                         <tr id={i.isActive?'':'isActive-tr'}>
                             <td class='vl1'>{i.route_ID}</td>
                             <td class='vl2 title-case'>{i.volunteer}</td>
                             <td class='vl3'>{this.getDate(i.date.toString())}</td>
@@ -217,7 +220,13 @@ export default class ViewLogs extends Component {
                                 <input class='date-input' type='date' id='selectDate' onChange={(event) => this.onFilterByDate(event)} /><br />
                             </td>
                             <td class='vol-input'>
-                                <DataListInput inputClassName={'volunteer-input'} itemClassName={'volunteer-input'} dropDownLength={'8'} placeholder={'Search Volunteers...'} items={this.state.volNames}
+
+                                <DataListInput
+                                    inputClassName={'volunteer-input'}
+                                    itemClassName={'volunteer-input'}
+                                    dropDownLength={'8'}
+                                    placeholder={'Search Volunteers...'}
+                                    items={this.state.volNames}
                                     onSelect={this.onClickFilterByVol} />
                             </td>
                             <td class='filter-button'>
@@ -235,13 +244,32 @@ export default class ViewLogs extends Component {
                             </thead>
                         </table>
                         <div class='route-history-table'>
-                            <table class='table table-sm table-striped'>
+                            <table class='table table-sm'>
                                 <tbody>
                                     {this.state.history}
                                 </tbody>
                             </table>
                         </div>
+                        <PrintComponents trigger={<button class='btn btn-secondary'>Print</button>}>
+                        <table class='title-table'>
+                            <thead>
+                                <th class='vl1'>Route</th>
+                                <th class='vl2'>Taken By</th>
+                                <th class='vl3'>Date</th>
+                                <th class='vl4'>Phone</th>
+                                <th class='vl5-left-align'>Text</th>
+                            </thead>
+                        </table>
+                        <div class='route-history-table'>
+                            <table class='table table-sm'>
+                                <tbody>
+                                    {this.state.history}
+                                </tbody>
+                            </table>
+                        </div>
+                            </PrintComponents>
                     </div>
+
 
                     {this.messageModal()}
                 </Fragment>

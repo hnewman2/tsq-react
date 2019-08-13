@@ -109,6 +109,7 @@ li {
     height: 60%;
 }
 
+
 /*Volunteer Keypad page*/
 
 .keypad-page-container {
@@ -197,7 +198,7 @@ li {
     float: right;
 }
 
-.add-new-vol-modal table{
+.add-new-vol-modal table {
     width: 100%;
 }
 
@@ -207,14 +208,16 @@ li {
     border: 1px dashed gray;
     padding-left: 5px;
 }
+
 .check-box-labels-not-bold {
     font-weight: normal;
 }
 
+
 /*Vol info page*/
 
 .vol-info-table {
-    position: absolute;
+    position: relative;
     width: 50%;
     margin-left: 25%;
     margin-right: 25%;
@@ -224,12 +227,13 @@ li {
     font-size: 30px;
 }
 
+
+/*
 .vol-info-table td {
     max-width: auto;
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
+}*/
 
 .vol-info-table .column1 {
     width: 20%;
@@ -400,6 +404,12 @@ li {
     height: 100%;
 }
 
+.recipients-input {
+    text-transform: capitalize;
+    text-align: left;
+    height: 50%;
+}
+
 .date-input {
     border: solid 1px rgb(155, 153, 153);
     height: 100%;
@@ -425,6 +435,21 @@ li {
 
 .routes-dropdown {
     width: 27%;
+}
+
+
+/*search recipients page*/
+
+.search-recipients-container {
+    height: 85%;
+    width: 75%;
+    margin-top: 3%;
+    margin-left: 12.5%;
+    margin-right: 12.5%;
+}
+
+.recipients-input {
+    text-transform: capitalize;
 }
 
 
@@ -482,26 +507,29 @@ textarea {
     cursor: pointer;
 }
 
-.routes-tables-container {
-    width: 50vw;
-    height: 70%;
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top: 4.5%;
-    vertical-align: top;
-    overflow: scroll;
-    overflow-x: hidden;
-    float: left;
-    border: solid 1px lightgray;
-}
-
-.pg-brk {
-    page-break-after: always;
-    width: 100%;
-    position: relative;
-}
-
 .contact-info-string {
     vertical-align: bottom;
     margin-bottom: 5px;
+}
+
+#isActive-tr {
+    background-color: mistyrose;
+    opacity: 65%;
+}
+
+.email-routes-modal {
+    text-align: center;
+    padding-top: 10px;
+}
+
+.all-routes-email-sheet {
+    text-align: left;
+}
+
+.vol-email-route-sheet {
+    text-align: left;
+}
+
+.email-input-route-sheet {
+    width: 100%;
 }

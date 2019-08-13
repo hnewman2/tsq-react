@@ -93,31 +93,31 @@ export default class AdminHome extends Component {
     }
     onChangeCheckbox(e) {
         let checked = e.target.checked;
-        let temp=this.state.memosToRemove;
-        if (checked){
+        let temp = this.state.memosToRemove;
+        if (checked) {
             temp.push(e.target.id);
-            this.setState({memosToRemove:temp});
-        }else{
-            let index= this.state.memosToRemove.indexOf(e.target.id);
-            temp.splice(index,1);
-            this.setState({memosToRemove:temp});
+            this.setState({ memosToRemove: temp });
+        } else {
+            let index = this.state.memosToRemove.indexOf(e.target.id);
+            temp.splice(index, 1);
+            this.setState({ memosToRemove: temp });
         }
     }
 
-    removeMemos(){
+    removeMemos() {
 
 
 
         fetch('/removeMemo', {
             method: 'POST',
-            body: JSON.stringify({memos: this.state.memosToRemove}),
+            body: JSON.stringify({ memos: this.state.memosToRemove }),
             headers: { "Content-Type": "application/json" }
         }).then(response => {
-            if (response.status == 200){
-                this.setState({ statusMsg: <div class="alert alert-success" role="alert">message removed</div>, memosToRemove:[]});
+            if (response.status == 200) {
+                this.setState({ statusMsg: <div class="alert alert-success" role="alert">message removed</div>, memosToRemove: [] });
                 this.getCurrentMemos();
             }
-            else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">error: message could not be removed</div> , memosToRemove:[]}) }
+            else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">error: message could not be removed</div>, memosToRemove: [] }) }
 
         });
     }
@@ -170,7 +170,7 @@ export default class AdminHome extends Component {
 
         let selected = document.getElementById("select");
         selected = selected[selected.selectedIndex].id;
-        
+
 
         this.setState({ selectedText: selected });
     }
@@ -252,6 +252,11 @@ export default class AdminHome extends Component {
                         </td>
                         <td>
                             <button class='admin-home-button' onClick={() => this.setState({ showMemoModal: true })}>Set Memo to Print</button><br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <Link class='admin-home-link' to='/searchRecipients'>Search Recipients</Link><br />
                         </td>
                     </tr>
                 </table>

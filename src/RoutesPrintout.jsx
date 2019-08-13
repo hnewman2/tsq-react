@@ -4,6 +4,7 @@ import PrintComponents from 'react-print-components';
 import './RoutesPrintoutStyles.css';
 import Cookies from 'js-cookie';
 import { Redirect } from 'react-router-dom';
+import Modal from 'react-responsive-modal';
 
 export default class AdminHome extends Component {
 
@@ -18,6 +19,11 @@ export default class AdminHome extends Component {
             routeTablesDetails: [],
             memos: [],
             loggedIn: true,
+            currentRoute: '',
+            email: '',
+            password: '',
+            memoList: [],
+            statusMsg: '',
 
         }
         this.setupRouteTables = this.setupRouteTables.bind(this);
@@ -37,17 +43,19 @@ export default class AdminHome extends Component {
                 if (response.status === 200) {
                     response.json().then(data => {
                         this.setState({ routeInfo: data }, this.createTables)
-                        //  let list=data.map(i=> i)
-                        // this.setState({ currentRouteInformation: list });
-                        // this.setState({ showRouteInformation: true });
+
                     })
-                } else {
-                    //  this.setState({ statusMsg: <div class="alert alert-danger" role="alert">Unable to retrieve route information. Please contact IT for help.</div> });
                 }
             });
     }
 
     componentDidMount() {
+
+        document.onclick = () => {
+            this.setState({
+                statusMsg: ''
+            });
+        }
 
         fetch("/authorizeAdmin", {
             method: "POST",
@@ -65,10 +73,7 @@ export default class AdminHome extends Component {
         this.getRouteInformation();
         this.getRoutes();
         this.getMemos();
-        /* i => this.setupRouteTables(i.route_ID, i.fName, i.lName, i.addressLine1, i.addressLine2, i.city, i.familySize, i.phone, i.addressNotes, i.centerNotes, i.notes)*/
     }
-
-
 
 
     setupRouteTables(route_ID, fName, lName, addressLine1, addressLine2, city,
@@ -76,11 +81,11 @@ export default class AdminHome extends Component {
 
 
         let table =
-            <tr id={route_ID}>
+            <tr id={route_ID} class='thick-bottom-border'>
+                <td class='route-table-size'>{familySize}</td>
                 <td class='route-table-name'>{fName} {lName}</td>
                 <td class='route-table-address'>{addressLine1}, &nbsp; {addressLine2}</td>
                 <td class='route-table-city'>{city}</td>
-                <td class='route-table-size'>{familySize}</td>
                 <td class='route-table-phone'>{this.getPhone(phone)}</td>
                 <td class='uppercase route-table-notes'>
                     {addressNotes ? <p>{addressNotes}</p> : null}
@@ -93,10 +98,6 @@ export default class AdminHome extends Component {
         return table;
 
 
-        /*let temp = this.state.routeInfo;
-        temp.push(table);
-        this.setState({ routeInfo: temp });*/
-
     }
     getMemos() {
         fetch('/getTodaysMemos', {
@@ -104,7 +105,7 @@ export default class AdminHome extends Component {
         }).then(response => {
             response.json().then(data => {
                 let list = data.map(m => <p class='memos'>{m.body}</p>);
-                this.setState({ memos: list });
+                this.setState({ memos: list, memoList: data });
             });
         });
     }
@@ -112,7 +113,7 @@ export default class AdminHome extends Component {
     createTables() {
         let tables = [];
         let hiddenTables = [];
-        //this.state.routes.forEach(i=>{
+
         for (let k = 0; k < this.state.routes.length; k++) {
 
             let i = this.state.routes[k];
@@ -131,10 +132,10 @@ export default class AdminHome extends Component {
                     <thead>
                         <tr><th class='route-table-id' colspan='6'>Route {i.route_ID}</th></tr>
                         <tr class='route-table-header-row'>
+                            <th class='route-table-size'>Qty</th>
                             <th class='route-table-name'>Name</th>
                             <th class='route-table-address'>Address</th>
                             <th class='route-table-city'>City</th>
-                            <th class='route-table-size'>Qty</th>
                             <th class='route-table-phone'>Contact</th>
                             <th class='route-table-notes'>Notes</th>
                         </tr>
@@ -161,9 +162,11 @@ export default class AdminHome extends Component {
             let HideTables = <details>
                 <summary>
                     {' Route: ' + i.route_ID}
+
                     <PrintComponents trigger={<button class='print-btn btn btn-secondary btn-sm'>Print </button>}>
                         <div /*class='print-table'*/>{table}</div>
                     </PrintComponents>
+                    <button class='print-btn btn btn-secondary btn-sm' id={i.route_ID} onClick={(e) => this.setState({ showEmailModal: true, currentRoute: e.target.id })}>Email</button>
                 </summary>
                 {table}
             </details>
@@ -211,6 +214,32 @@ export default class AdminHome extends Component {
         newPhone = '(' + areaCode + ') ' + three + '-' + four;
         return newPhone;
     }
+    getTodayDate = () => {
+        var today = new Date();
+        var todayString = (today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear();
+        return todayString;
+    }
+
+    onClickSendRouteEmail() {
+        fetch('/create-pdf', {
+            method: 'POST',
+            body: JSON.stringify({
+                route: this.state.currentRoute, recipients: this.state.email,
+                password: this.state.password, subject: 'Tomchei Deliveries Route ' + this.state.currentRoute,
+                body: 'See attached Route Sheet for ' + this.getTodayDate() + '. \nThank you and Tizku L\'Mitzvos!',
+                memos: this.state.memoList
+            }),
+            headers: { "Content-Type": "application/json" }
+        }).then(response => {
+            if (response.status === 200) {
+                this.setState({ returnToLogin: true, statusMsg: <div class="alert alert-success" role="alert">Email Sent Successfully.</div> });
+            } else {
+                this.setState({ returnToLogin: true, statusMsg: <div class="alert alert-danger" role="alert">Error...Unable to send email.</div> });
+            }
+        });
+
+        this.setState({ showEmailModal: false });
+    }
 
     getRoutes() {
         fetch('/getRoutes', {
@@ -230,15 +259,40 @@ export default class AdminHome extends Component {
 
         return (
             <Fragment>
+                {this.state.statusMsg}
                 <div class='routes-tables-container'>
                     {this.state.routeTablesDetails}
                 </div>
                 <div class='print-all'>
+
                     <PrintComponents trigger={<button class='btn btn-info'>Print All</button>}>
                         {this.state.routeTables}
                         {/*<div class='print-table'>{this.state.routeTables}</div>*/}
                     </PrintComponents>
                 </div>
+
+
+                <Modal
+                    center
+                    open={this.state.showEmailModal}
+                    onClose={() => this.setState({ showEmailModal: false })}>
+                    <div class='email-routes-modal'>
+                        <h4>Email Route Sheet</h4>
+                        <table class='all-routes-email-sheet'>
+                            <tr>
+                                <td>Enter email address: </td>
+                                <td><input type='email'
+                                    onChange={(e) => this.setState({ email: e.target.value })} /></td>
+                            </tr>
+                            <tr>
+                                <td>Enter password for TSQ email:</td>
+                                <td><input type='password' autoComplete='new-password' onChange={(e) => this.setState({ password: e.target.value })} /></td>
+                            </tr>
+                            </table><br/>
+                            <button class='btn btn-secondary' onClick={() => this.onClickSendRouteEmail()}>Send</button>
+                            &nbsp;<button class='btn btn-info' onClick={() => this.setState({ showEmailModal: false })}>Cancel</button>
+                    </div>
+                </Modal>
             </Fragment>
         );
     }

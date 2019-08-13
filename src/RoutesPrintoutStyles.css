@@ -42,9 +42,15 @@ details[open] {
 
 .routes-tables-container {
     width: 70%;
-    margin-top: 3%;
+    height: 70%;
     margin-left: 15%;
     margin-right: 15%;
+    margin-top: 4.5%;
+    vertical-align: top;
+    overflow: scroll;
+    overflow-x: hidden;
+    float: left;
+    border: solid 1px lightgray;
     margin-bottom: 3vh;
 }
 
@@ -67,15 +73,7 @@ details[open] {
     height: 4vh;
     width: 6vw;
     font-size: 1.8vh;
-}
-
-.memos {
-    width: 100%;
-    text-align: center;
-}
-
-.contact-info-string {
-    bottom: 0px;
+    margin-left: 5px;
 }
 
 .uppercase {
@@ -87,6 +85,9 @@ details[open] {
     width: 90%;
     margin-left: 5%;
     margin-right: 5%;
+    bottom: 0px;
+    vertical-align: bottom;
+    margin-bottom: 5px;
 }
 
 .contact-info-string a {
@@ -94,6 +95,7 @@ details[open] {
 }
 
 .memos {
+    text-align: center;
     border: 1px dashed #a9a9a9;
     margin-left: 2%;
     margin-right: 2%;
@@ -173,4 +175,14 @@ details[open] {
     top: 50%;
     right: 50%;
     transform: translate(50%, -50%);
+}
+
+.thick-bottom-border {
+    border-bottom: 10px solid darkgray;
+}
+
+.pg-brk {
+    page-break-after: always;
+    width: 100%;
+    position: relative;
 }
