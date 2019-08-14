@@ -15,48 +15,98 @@ export default class EditAllVolInfo extends Component {
         super(props);
         window.EditAllVolInfo = this;
 
+
+
+        this.state = {
+            columns: [],
+
+            rows: [],
+            rowCount: 0,
+            boolDropDown: [],
+            stateDR:[],
+            shulDR:[]
+        }
+        this.getVolInfo = this.getVolInfo.bind(this);
+        this.setUpCols = this.setUpCols.bind(this);
+        this.getStateDropDown = this.getStateDropDown.bind(this);
+        this.getShulDropDown=this.getShulDropDown.bind(this);
+    }
+
+    setUpCols() {
+
+
         const defaultColumnProperties = {
             resizable: true,
             width: 120
         };
-       /* const dropDownOptions= [{ id: 0, value: 'false' },
-            { id: 1, value: 'true' }];*/
+        const boolDROptions = [{ id: 0, value: 'false' },
+        { id: 1, value: 'true' }];
+        const IssueTypeEditor = <DropDownEditor options={boolDROptions} />;
 
-      const IssueTypeEditor = <DropDownEditor options={dropDownOptions} />;
+        const shulDROptions = this.state.shulDR;
+        const IssueTypeEditorShul = <DropDownEditor options={shulDROptions} />;
 
-        this.state = {
-            columns: [
-                { key: 'id', name: 'ID' },
-                { key: 'fName', name: 'First Name', editable: true },
-                { key: 'lName', name: 'Last Name', editable: true },
-                { key: 'address', name: 'Address', editable: true },
-                { key: 'city', name: 'City', editable: true },
-                { key: 'state', name: 'State', editable: true },
-                { key: 'zip', name: 'Zip', editable: true },
-                { key: 'phone', name: 'Phone', editable: true },
-                { key: 'sendSMS', name: 'Send SMS', editor:IssueTypeEditor },
-                { key: 'email', name: 'Email', editable: true },
-                { key: 'sendEmail', name: 'Send Email', editable: true, editor:IssueTypeEditor  },
-                { key: 'isActive', name: 'Is Active', editable: true, editor:IssueTypeEditor  },
-                { key: 'primaryRoute_id', name: 'Primary Route', editable: true },
-                { key: 'shul_ID', name: 'Shul', editable: true },
-            ].map(c => ({ ...c, ...defaultColumnProperties })),
+        const stateDROptions = this.state.stateDR;
+        const IssueTypeEditorState = <DropDownEditor options={stateDROptions} />;
 
-            rows: [],
-            rowCount: 0,
-            boolDropDown:[]
-        }
-        this.getVolInfo = this.getVolInfo.bind(this);
-        this.setUpBoolDropDown=this.setUpBoolDropDown.bind(this);
+
+        let cols = [
+            { key: 'id', name: 'ID' },
+            { key: 'fName', name: 'First Name', editable: true },
+            { key: 'lName', name: 'Last Name', editable: true },
+            { key: 'address', name: 'Address', editable: true },
+            { key: 'city', name: 'City', editable: true },
+            { key: 'state', name: 'State', editable: true,editor:IssueTypeEditorState },
+            { key: 'zip', name: 'Zip', editable: true },
+            { key: 'phone', name: 'Phone', editable: true },
+            { key: 'sendSMS', name: 'Send SMS', editor: IssueTypeEditor },
+            { key: 'email', name: 'Email', editable: true },
+            { key: 'sendEmail', name: 'Send Email', editable: true, editor: IssueTypeEditor },
+            { key: 'isActive', name: 'Is Active', editable: true, editor: IssueTypeEditor },
+            { key: 'primaryRoute_id', name: 'Primary Route', editable: true },
+            { key: 'shul_ID', name: 'Shul', editable: true, editor:IssueTypeEditorShul },
+        ].map(c => ({ ...c, ...defaultColumnProperties }));
+
+        this.setState({ columns: cols });
     }
 
-    setUpBoolDropDown(){
-        this.setState({boolDropDown:[{ id: 0, value: 'false' },
-        { id: 1, value: 'true' }]});
+    getStateDropDown() {
+        fetch('/getStates', {
+            method: 'POST'
+        }).then(response => {
+            response.json().then(data => {
+                let list = data.map(st => {
+                        return ({
+                            id: st.state_ID,
+                            value: st.abbr
+                        });
+                    });
+                    console.log(list);
+                    this.setState({stateDR:list},this.setUpCols);  
+            });
+        });
     }
-
-
+    getShulDropDown() {
+        fetch('/getShuls', {
+            method: 'POST'
+        }).then(response => {
+            response.json().then(data => {
+                
+                let list=data.map(sh => {
+                        return ({
+                            id: sh.shul_ID,
+                            value: sh.name
+                        });
+                    })
+                    console.log(list);
+                this.setState({shulDR:list},this.setUpCols);
+            })
+        });
+    }
     componentDidMount() {
+        this.getShulDropDown();
+        this.getStateDropDown();
+        //this.setUpCols();
         this.getVolInfo();
     }
 
@@ -75,15 +125,15 @@ export default class EditAllVolInfo extends Component {
                             lName: v.lastName,
                             address: v.address,
                             city: v.city,
-                            state: v.state,
+                            state: v.abbr,
                             zip: v.zip,
                             phone: v.phone,
-                            sendSMS: v.sendSMS==0?"false":"true",
+                            sendSMS: v.sendSMS == 0 ? 'false' : 'true',
                             email: v.email,
-                            sendEmail: v.sendEmail==0?'false':'true',
-                            isActive: v.isActive==0?'false':'true',
+                            sendEmail: v.sendEmail == 0 ? 'false' : 'true',
+                            isActive: v.isActive == 0 ? 'false' : 'true',
                             primaryRoute_id: v.primaryRouteID,
-                            shul_ID: v.shul_ID
+                            shul_ID: v.name
 
                         });
                     });

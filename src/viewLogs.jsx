@@ -65,7 +65,7 @@ export default class ViewLogs extends Component {
     }
 
     getHistory(path, body) {
-        let tableClass='';
+        let tableClass = '';
         fetch("/routeHistory" + path, {
             method: "POST",
             body: body,
@@ -75,13 +75,14 @@ export default class ViewLogs extends Component {
                 response.json().then(data => {
                     var list = data.map(
                         i =>
-                         <tr id={i.isActive?'':'isActive-tr'}>
-                            <td class='vl1'>{i.route_ID}</td>
-                            <td class='vl2 title-case'>{i.volunteer}</td>
-                            <td class='vl3'>{this.getDate(i.date.toString())}</td>
-                            <td class='vl4'>{this.getPhone(i.phone)}</td>
-                            <td class='vl5'><button id={i.phone} onClick={(event) => this.onClickSendText(event)}>&#128241;</button></td>
-                        </tr>);
+                            <tr id={i.isActive ? '' : 'isActive-tr'}>
+                                <td class='vl5'><button id={i.phone} onClick={(event) => this.onClickSendText(event)}>&#128241;</button></td>
+                                <td class='vl1'>{i.route_ID}</td>
+                                <td class='vl2 title-case'>{i.volunteer}</td>
+                                <td class='vl3'>{this.getDate(i.date.toString())}</td>
+                                <td class='vl4'>{this.getPhone(i.phone)}</td>
+                                <td class='vl6'>{i.partner}</td>
+                            </tr>);
                     this.setState({ history: list, showHistory: true });
                 });
             }
@@ -236,11 +237,13 @@ export default class ViewLogs extends Component {
 
                         <table class='title-table'>
                             <thead>
+                                <th class='vl5'>Text</th>
                                 <th class='vl1'>Route</th>
                                 <th class='vl2'>Taken By</th>
                                 <th class='vl3'>Date</th>
                                 <th class='vl4'>Phone</th>
-                                <th class='vl5-left-align'>Text</th>
+                                <th class='vl6'>Partner</th>
+
                             </thead>
                         </table>
                         <div class='route-history-table'>
@@ -251,23 +254,24 @@ export default class ViewLogs extends Component {
                             </table>
                         </div>
                         <PrintComponents trigger={<button class='btn btn-secondary'>Print</button>}>
-                        <table class='title-table'>
-                            <thead>
-                                <th class='vl1'>Route</th>
-                                <th class='vl2'>Taken By</th>
-                                <th class='vl3'>Date</th>
-                                <th class='vl4'>Phone</th>
-                                <th class='vl5-left-align'>Text</th>
-                            </thead>
-                        </table>
-                        <div class='route-history-table'>
-                            <table class='table table-sm'>
-                                <tbody>
-                                    {this.state.history}
-                                </tbody>
+                            <table class='title-table'>
+                                <thead>
+                                    <th class='vl5'>Text</th>
+                                    <th class='vl1'>Route</th>
+                                    <th class='vl2'>Taken By</th>
+                                    <th class='vl3'>Date</th>
+                                    <th class='vl4'>Phone</th>
+                                    <th class='vl6'>Partner</th>
+                                </thead>
                             </table>
-                        </div>
-                            </PrintComponents>
+                            <div class='route-history-table'>
+                                <table class='table table-sm'>
+                                    <tbody>
+                                        {this.state.history}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </PrintComponents>
                     </div>
 
 

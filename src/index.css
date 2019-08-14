@@ -360,9 +360,8 @@ li {
     width: 100%;
 }
 
-.vl5-left-align {
-    text-align: right;
-    padding-right: 15px;
+.title-table {
+    text-align: left;
 }
 
 .vl1 {
@@ -372,13 +371,17 @@ li {
 
 .vl1,
 .vl5 {
-    width: 11%;
+    width: 6%;
+}
+
+.vl3,
+.vl4 {
+    width: 20%;
 }
 
 .vl2,
-.vl3,
-.vl4 {
-    width: 26%;
+.vl6 {
+    width: 24%;
     text-align: left;
 }
 
