@@ -15,21 +15,19 @@ export default class EditAllVolInfo extends Component {
         super(props);
         window.EditAllVolInfo = this;
 
-
-
         this.state = {
             columns: [],
 
             rows: [],
             rowCount: 0,
             boolDropDown: [],
-            stateDR:[],
-            shulDR:[]
+            stateDR: [],
+            shulDR: []
         }
         this.getVolInfo = this.getVolInfo.bind(this);
         this.setUpCols = this.setUpCols.bind(this);
         this.getStateDropDown = this.getStateDropDown.bind(this);
-        this.getShulDropDown=this.getShulDropDown.bind(this);
+        this.getShulDropDown = this.getShulDropDown.bind(this);
     }
 
     setUpCols() {
@@ -37,7 +35,8 @@ export default class EditAllVolInfo extends Component {
 
         const defaultColumnProperties = {
             resizable: true,
-            width: 120
+            width: 120,
+            sortable: true
         };
         const boolDROptions = [{ id: 0, value: 'false' },
         { id: 1, value: 'true' }];
@@ -56,7 +55,7 @@ export default class EditAllVolInfo extends Component {
             { key: 'lName', name: 'Last Name', editable: true },
             { key: 'address', name: 'Address', editable: true },
             { key: 'city', name: 'City', editable: true },
-            { key: 'state', name: 'State', editable: true,editor:IssueTypeEditorState },
+            { key: 'state', name: 'State', editable: true, editor: IssueTypeEditorState },
             { key: 'zip', name: 'Zip', editable: true },
             { key: 'phone', name: 'Phone', editable: true },
             { key: 'sendSMS', name: 'Send SMS', editor: IssueTypeEditor },
@@ -64,7 +63,7 @@ export default class EditAllVolInfo extends Component {
             { key: 'sendEmail', name: 'Send Email', editable: true, editor: IssueTypeEditor },
             { key: 'isActive', name: 'Is Active', editable: true, editor: IssueTypeEditor },
             { key: 'primaryRoute_id', name: 'Primary Route', editable: true },
-            { key: 'shul_ID', name: 'Shul', editable: true, editor:IssueTypeEditorShul },
+            { key: 'shul_ID', name: 'Shul', editable: true, editor: IssueTypeEditorShul },
         ].map(c => ({ ...c, ...defaultColumnProperties }));
 
         this.setState({ columns: cols });
@@ -76,14 +75,14 @@ export default class EditAllVolInfo extends Component {
         }).then(response => {
             response.json().then(data => {
                 let list = data.map(st => {
-                        return ({
-                            id: st.state_ID,
-                            value: st.abbr
-                        });
+                    return ({
+                        id: st.state_ID,
+                        value: st.abbr
                     });
-                    console.log(list);
-                    this.setState({stateDR:list},this.setUpCols);  
-            });
+                })
+                // console.log(list);
+                this.setState({ stateDR: list }, this.setUpCols);
+            })
         });
     }
     getShulDropDown() {
@@ -91,15 +90,15 @@ export default class EditAllVolInfo extends Component {
             method: 'POST'
         }).then(response => {
             response.json().then(data => {
-                
-                let list=data.map(sh => {
-                        return ({
-                            id: sh.shul_ID,
-                            value: sh.name
-                        });
-                    })
-                    console.log(list);
-                this.setState({shulDR:list},this.setUpCols);
+
+                let list = data.map(sh => {
+                    return ({
+                        id: sh.shul_ID,
+                        value: sh.name
+                    });
+                })
+                //  console.log(list);
+                this.setState({ shulDR: list }, this.setUpCols);
             })
         });
     }
@@ -108,7 +107,31 @@ export default class EditAllVolInfo extends Component {
         this.getStateDropDown();
         //this.setUpCols();
         this.getVolInfo();
+
+
+     /*   const sortRows = (initialRows, sortColumn, sortDirection) => rows => {
+            const comparer = (a, b) => {
+              if (sortDirection === "ASC") {]=
+                return a[sortColumn] > b[sortColumn] ? 1 : -1;
+              } else if (sortDirection === "DESC") {
+                return a[sortColumn] < b[sortColumn] ? 1 : -1;
+              }
+            };
+            return sortDirection === "NONE" ? initialRows : [...rows].sort(comparer);
+          };*/
     }
+
+  /*  sortRows(initialRows, sortColumn, sortDirection){
+        const comparer = (a, b) => {
+            if (sortDirection === "ASC") {
+              return a[sortColumn] > b[sortColumn] ? 1 : -1;
+            } else if (sortDirection === "DESC") {
+              return a[sortColumn] < b[sortColumn] ? 1 : -1;
+            }
+          };
+          return sortDirection === "NONE" ? initialRows : [...rows].sort(comparer);
+        };*/
+    
 
     getVolInfo() {
         let rows = 0;
@@ -144,12 +167,22 @@ export default class EditAllVolInfo extends Component {
         });
     }
 
+
+    
+
     onGridRowsUpdated = ({ fromRow, toRow, updated }) => {
 
         console.log('fromRow: ' + fromRow);
         console.log('toRow: ' + toRow);
-        console.log(updated);
+        console.log('updated: ' + updated);
+
         let derivedKey = Object.keys(updated);
+
+          if(derivedKey == 'state'){
+              let value = updated[derivedKey].id;
+              console.log('in the if(){} the value is: '+value);
+          }
+
         let value = updated[derivedKey];
         let volID = this.state.rows[toRow].id;
 
@@ -191,7 +224,11 @@ export default class EditAllVolInfo extends Component {
                 rowsCount={window.EditAllVolInfo.state.rowCount}
                 minHeight={600}
                 enableCellSelect={true}
-                onGridRowsUpdated={this.onGridRowsUpdated} />
+                onGridRowsUpdated={this.onGridRowsUpdated}
+                onGridSort={(sortColumn, sortDirection) => console.log('sortColumn has: ' + sortColumn
+                + '\n sortDirection has: '+ sortDirection)
+                  /*  setRows(sortRows(initialRows, sortColumn, sortDirection))*/
+                  } />
         );
     }
 }

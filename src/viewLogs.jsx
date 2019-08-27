@@ -81,7 +81,7 @@ export default class ViewLogs extends Component {
                                 <td class='vl2 title-case'>{i.volunteer}</td>
                                 <td class='vl3'>{this.getDate(i.date.toString())}</td>
                                 <td class='vl4'>{this.getPhone(i.phone)}</td>
-                                <td class='vl6'>{i.partner}</td>
+                                <td class='vl6'>{i.partner? i.partner: 'No partner selected.'}</td>
                             </tr>);
                     this.setState({ history: list, showHistory: true });
                 });
