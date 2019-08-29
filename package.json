@@ -16,6 +16,7 @@
     "react-data-grid-addons": "^6.1.0",
     "react-datalist-input": "^1.2.7",
     "react-dom": "^16.8.6",
+    "react-html-table-to-excel": "^2.0.0",
     "react-print-components": "^1.0.4",
     "react-responsive-modal": "^4.0.1",
     "react-router-dom": "^5.0.1",

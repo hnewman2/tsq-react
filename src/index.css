@@ -568,3 +568,9 @@ textarea {
 .email-input-route-sheet {
     width: 100%;
 }
+
+.invisible-table{
+    max-width: 0;
+    max-height: 0;
+    overflow: hidden;
+}

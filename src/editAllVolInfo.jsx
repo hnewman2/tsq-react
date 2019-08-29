@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import ReactDataGrid from 'react-data-grid';
 import { Editors } from "react-data-grid-addons";
 import PrintComponents from 'react-print-components';
+import ReactToExcel from 'react-html-table-to-excel';
 
 const { DropDownEditor } = Editors;
 
@@ -25,7 +26,8 @@ export default class EditAllVolInfo extends Component {
             rowCount: 0,
             boolDropDown: [],
             stateDR: [],
-            shulDR: []
+            shulDR: [],
+            exportTableRows: []
         }
         this.getVolInfo = this.getVolInfo.bind(this);
         this.setUpCols = this.setUpCols.bind(this);
@@ -41,8 +43,8 @@ export default class EditAllVolInfo extends Component {
             width: 120,
             sortable: true
         };
-        const boolDROptions = [{ id: 0, value: 'false' },
-        { id: 1, value: 'true' }];
+        const boolDROptions = [{ id: 0, value: 'no' },
+        { id: 1, value: 'yes' }];
         const IssueTypeEditor = <DropDownEditor options={boolDROptions} />;
 
         const shulDROptions = this.state.shulDR;
@@ -58,7 +60,7 @@ export default class EditAllVolInfo extends Component {
             { key: 'lName', name: 'Last Name', editable: true },
             { key: 'address', name: 'Address', editable: true },
             { key: 'city', name: 'City', editable: true },
-            { key: 'state', name: 'State', editable: true, editor: IssueTypeEditorState },
+            { key: 'States', name: 'State', editable: true, editor: IssueTypeEditorState },
             { key: 'zip', name: 'Zip', editable: true },
             { key: 'phone', name: 'Phone', editable: true },
             { key: 'sendSMS', name: 'Send SMS', editor: IssueTypeEditor },
@@ -66,8 +68,8 @@ export default class EditAllVolInfo extends Component {
             { key: 'sendEmail', name: 'Send Email', editable: true, editor: IssueTypeEditor },
             { key: 'isActive', name: 'Is Active', editable: true, editor: IssueTypeEditor },
             { key: 'primaryRoute_id', name: 'Primary Route', editable: true },
-            { key: 'shul_ID', name: 'Shul', editable: true, editor: IssueTypeEditorShul },
-            {key:'editVolTypes', name: 'edit vol types'},
+            { key: 'Shuls', name: 'Shul', editable: true, editor: IssueTypeEditorShul },
+            { key: 'editVolTypes', name: 'edit vol types' },
         ].map(c => ({ ...c, ...defaultColumnProperties }));
 
         this.setState({ columns: cols });
@@ -152,40 +154,67 @@ export default class EditAllVolInfo extends Component {
 
 
     getVolInfo() {
-        let rows = 0;
+
         fetch('/getAllVol', {
             method: 'POST',
             headers: { "Content-Type": "text/plain" }
         }).then(response => {
             if (response.status === 200) {
                 response.json().then(data => {
-                    let list = data.map(v => {
-                        return ({
-                            id: v.vol_ID,
-                            fName: v.firstName,
-                            lName: v.lastName,
-                            address: v.address,
-                            city: v.city,
-                            state: v.abbr,
-                            zip: v.zip,
-                            phone: v.phone,
-                            sendSMS: v.sendSMS == 0 ? 'false' : 'true',
-                            email: v.email,
-                            sendEmail: v.sendEmail == 0 ? 'false' : 'true',
-                            isActive: v.isActive == 0 ? 'false' : 'true',
-                            primaryRoute_id: v.primaryRouteID,
-                            shul_ID: v.name,
-                            editVolTypes: <button onClick={()=>console.log('button was clicked!')}>view and edit vol types</button>
-                        });
-                    });
-                    data.forEach(() => ++rows);
-                    this.setState({ rows: list, rowCount: rows });
+                    this.createTableView(data);
+                    this.createTableExport(data);
                 })
             }
         });
     }
 
+    createTableView(data) {
+        let rows = 0;
+        let list = data.map(v => {
+            return ({
+                id: v.vol_ID,
+                fName: v.firstName,
+                lName: v.lastName,
+                address: v.address,
+                city: v.city,
+                States: v.abbr,
+                zip: v.zip,
+                phone: v.phone,
+                sendSMS: v.sendSMS == 0 ? 'no' : 'yes',
+                email: v.email,
+                sendEmail: v.sendEmail == 0 ? 'no' : 'yes',
+                isActive: v.isActive == 0 ? 'no' : 'yes',
+                primaryRoute_id: v.primaryRouteID,
+                Shuls: v.name,
+                editVolTypes: <button onClick={() => console.log('button was clicked!')}>view and edit vol types</button>
+            });
+        });
+        data.forEach(() => ++rows);
+        this.setState({ rows: list, rowCount: rows });
+    }
 
+    createTableExport(data) {
+
+        let list = data.map(v =>
+            <tr>
+                <td>{v.vol_ID}</td>
+                <td>{v.firstName}</td>
+                <td>{v.lastName}</td>
+                <td>{v.address}</td>
+                <td>{v.city}</td>
+                <td>{v.abbr}</td>
+                <td>{v.zip}</td>
+                <td>{v.phone}</td>
+                <td>{v.sendSMS == 0 ? 'no' : 'yes'}</td>
+                <td>{v.email}</td>
+                <td>{v.sendEmail == 0 ? 'no' : 'yes'}</td>
+                <td>{v.isActive == 0 ? 'no' : 'yes'}</td>
+                <td>{v.primaryRouteID}</td>
+                <td>{v.name}</td>
+            </tr>
+        );
+        this.setState({ exportTableRows: list });
+    }
 
 
     onGridRowsUpdated = ({ fromRow, toRow, updated }) => {
@@ -196,27 +225,42 @@ export default class EditAllVolInfo extends Component {
 
         let derivedKey = Object.keys(updated);
 
-        if (derivedKey == 'state') {
-            let value = updated[derivedKey].id;
-            console.log('in the if(){} the value is: ' + value);
-        }
 
         let value = updated[derivedKey];
         let volID = this.state.rows[toRow].id;
 
         let updateData = { key: derivedKey, value: value, id: volID }
 
-        fetch('/massUpdateVolInfo', {
-            method: 'POST',
-            body: JSON.stringify(updateData),
-            headers: { "Content-Type": "application/json" }
-        }).then(response => {
-            if (response.status === 200) {
-                response.json().then(() => {
 
-                })
-            }
-        });
+
+        if (derivedKey == 'States' || derivedKey =='Shuls' ) {
+            fetch('/updateVolState', {
+                method: 'POST',
+                body: JSON.stringify(updateData),
+                headers: { "Content-Type": "application/json" }
+            }).then(response => {
+                if (response.status === 200) {
+                    response.json().then(() => {
+
+                    })
+                }
+            })
+
+        }
+        else {
+
+            fetch('/massUpdateVolInfo', {
+                method: 'POST',
+                body: JSON.stringify(updateData),
+                headers: { "Content-Type": "application/json" }
+            }).then(response => {
+                if (response.status === 200) {
+                    response.json().then(() => {
+
+                    })
+                }
+            })
+        };
 
 
         console.log('the key is:' + derivedKey);
@@ -233,21 +277,44 @@ export default class EditAllVolInfo extends Component {
         });
     };
 
-    volSheet(){
-        return(
+    volSheet() {
+        return (
             <ReactDataGrid
-                    columns={window.EditAllVolInfo.state.columns}
-                    rowGetter={i => window.EditAllVolInfo.state.rows[i]}
-                    rowsCount={window.EditAllVolInfo.state.rowCount}
-                    minHeight={520}
-                    minWidth={1440}
-                    enableCellSelect={true}
-                    onGridRowsUpdated={this.onGridRowsUpdated}
-                    onGridSort={(sortColumn, sortDirection) => console.log('sortColumn has: ' + sortColumn
-                        + '\n sortDirection has: ' + sortDirection)
-                        /*  setRows(sortRows(initialRows, sortColumn, sortDirection))*/
-                    } />
+                columns={window.EditAllVolInfo.state.columns}
+                rowGetter={i => window.EditAllVolInfo.state.rows[i]}
+                rowsCount={window.EditAllVolInfo.state.rowCount}
+                //  minHeight={520}
+                //  minWidth={1440}
+                enableCellSelect={true}
+                onGridRowsUpdated={this.onGridRowsUpdated}
+                onGridSort={(sortColumn, sortDirection) => console.log('sortColumn has: ' + sortColumn
+                    + '\n sortDirection has: ' + sortDirection)
+                    /*  setRows(sortRows(initialRows, sortColumn, sortDirection))*/
+                } />
         );
+    }
+    setupTable() {
+        return (<table id="tableExport">
+            <thead>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Address </th>
+                <th>City</th>
+                <th>State</th>
+                <th>Zip</th>
+                <th>Phone</th>
+                <th>Send SMS</th>
+                <th>Email</th>
+                <th>Send Email</th>
+                <th>Is Active</th>
+                <th>Primary Route</th>
+                <th>Shul</th>
+            </thead>
+            <tbody>
+                {this.state.exportTableRows}
+            </tbody>
+        </table>)
     }
 
     render() {
@@ -262,8 +329,19 @@ export default class EditAllVolInfo extends Component {
             <div class='vol-excel-page'>
                 {this.volSheet()}
                 <PrintComponents trigger={<button class='btn btn-secondary print-volinfo-btn'>Print</button>}>
-                            {this.volSheet()}
+                    {this.setupTable()}
                 </PrintComponents>
+                <div class='invisible-table'>
+                    {this.setupTable()}
+                </div>
+                <ReactToExcel
+                    className='btn btn-secondary print-volinfo-btn'
+                    table='tableExport'
+                    fileName='volunteer data'
+                    sheet='sheet 1'
+                    buttonText='Export to Excel'
+                />
+
             </div>
         );
     }
