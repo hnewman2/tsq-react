@@ -46,7 +46,8 @@ const Main = (props) => (
             <Route path='/viewLogs' render={() => <ViewLogs setAdmin={props.setAdmin}
                 setHeaderTitle={props.setHeaderTitle} />} />
             <Route path='/messages' render={() => <AdminMessages setAdmin={props.setAdmin}
-                setHeaderTitle={props.setHeaderTitle} />} />
+                setHeaderTitle={props.setHeaderTitle}
+                />} />
             <Route path='/viewStatus' render={() => <ViewStatus setAdmin={props.setAdmin}
                 setHeaderTitle={props.setHeaderTitle} />} />
             <Route path='/smsInbox' render={() => <Inbox setSelectedContact={props.setSelectedContact}

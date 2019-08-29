@@ -16,7 +16,7 @@ class App extends Component {
             userLoggedIn: Cookies.get('authCookie') ? true : false,
             adminLoggedIn: Cookies.get('adminAuthCookie') ? true : false,
             headerTitle: Cookies.get('headerTitle'),
-            unreadCount:0
+            unreadCount:0,
         };
         this.eventSource = new EventSource('/newMessage');
     }
@@ -54,7 +54,7 @@ class App extends Component {
                   unreadCount={this.state.unreadCount}
             />
             
-          
+            {this.state.statusMsg}
             <Main setHeaderTitle = {(title) => this.setState({ headerTitle: title })}
                   setAdmin = {() => this.setState({ admin: true })}
                   resetAdmin = {() => this.setState({ admin: false })}
@@ -69,7 +69,7 @@ class App extends Component {
                   logOutUser = {() => this.setState({ userLoggedIn: false }) }
                   logInAdmin = {() => this.setState({ adminLoggedIn: true })}
                   logOutAdmin = {() => this.setState({ adminLoggedIn: false }) }
-                resetUnread={()=>{this.getUnreadCount()}}
+                  resetUnread={()=>{this.getUnreadCount()}}
           />
         </Fragment>
     );

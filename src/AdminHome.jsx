@@ -21,9 +21,12 @@ export default class AdminHome extends Component {
             memos: [],
             selectedText: '',
             currentMemos: [],
-            memosToRemove: []
+            memosToRemove: [],
+            currEmailAdd: '',
+            currEmailFrom: ''
         }
         this.getPhone = this.getPhone.bind(this);
+        this.getCurrEmailConfig = this.getCurrEmailConfig.bind(this);
 
     }
 
@@ -53,8 +56,50 @@ export default class AdminHome extends Component {
         this.getVolunteers();
         this.getAllMemos();
         this.getCurrentMemos();
+        this.getCurrEmailConfig();
 
     }
+
+    getCurrEmailConfig() {
+        fetch('/getCurrEmailConfig', {
+            method: 'POST'
+        }).then(response => {
+            response.json().then(data => {
+                this.setState({
+                    currEmailAdd: data[0].user,
+                    currEmailFrom: data[0].fromName
+                });
+            });
+
+        });
+    }
+
+    onClickUpdateEmailConfig() {
+        this.setState({ showEmailConfigModal: false });
+
+        fetch('/updateEmailConfig', {
+            method: 'POST',
+            body: JSON.stringify({ user: this.state.currEmailAdd, from: this.state.currEmailFrom }),
+            headers: { "Content-Type": "application/json" }
+        }).then(response => {
+            if (response.status === 200) {
+                this.setState({ statusMsg: <div class="alert alert-success" role="alert">Email Config Updated Successfully</div> });
+            } else {
+                this.setState({ statusMsg: <div class="alert alert-danger" role="alert">Error... Unable to Update Email Config</div> });
+            }
+        });
+
+    }
+
+    onChangeEmailAddress(e) {
+        this.setState({ currEmailAdd: e.target.value });
+    }
+
+    onChangeFrom(e) {
+        this.setState({ currEmailFrom: e.target.value });
+    }
+
+
 
     getPhone(phone) {
         var areaCode = phone.substring(0, 3);
@@ -71,8 +116,12 @@ export default class AdminHome extends Component {
             method: 'POST'
         }).then(response => {
             response.json().then(data => {
-                let list = data.map(m => <p><input type='checkbox' id={m.id} onChange={(e) => this.onChangeCheckbox(e)} /><lable>{m.body}</lable></p>);
-                this.setState({ currentMemos: list });
+                if (data.length > 0) {
+                    let list = data.map(m => <p><input type='checkbox' id={m.id} onChange={(e) => this.onChangeCheckbox(e)} /><lable>{m.body}</lable></p>);
+                    this.setState({ currentMemos: list });
+                } else {
+                    this.setState({ currentMemos: 'No memos selected.' });
+                }
             })
         });
     }
@@ -106,18 +155,16 @@ export default class AdminHome extends Component {
 
     removeMemos() {
 
-
-
         fetch('/removeMemo', {
             method: 'POST',
             body: JSON.stringify({ memos: this.state.memosToRemove }),
             headers: { "Content-Type": "application/json" }
         }).then(response => {
             if (response.status == 200) {
-                this.setState({ statusMsg: <div class="alert alert-success" role="alert">message removed</div>, memosToRemove: [] });
+                this.setState({ statusMsg: <div class="alert alert-success" role="alert">Message removed</div>, memosToRemove: [] });
                 this.getCurrentMemos();
             }
-            else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">error: message could not be removed</div>, memosToRemove: [] }) }
+            else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">Error: message could not be removed</div>, memosToRemove: [] }) }
 
         });
     }
@@ -176,6 +223,10 @@ export default class AdminHome extends Component {
     }
     onClickSelect() {
 
+        if(this.state.selectedText === 'placeholder' || this.state.selectedText=== ''){
+            return;
+        }
+
         console.log(this.state.selectedText);
         fetch('/updateMemo', {
             method: 'POST',
@@ -183,10 +234,10 @@ export default class AdminHome extends Component {
             headers: { "Content-Type": "text/plain" }
         }).then(response => {
             if (response.status == 200) {
-                this.setState({ statusMsg: <div class="alert alert-success" role="alert">message added!</div> });
+                this.setState({ statusMsg: <div class="alert alert-success" role="alert">Message added!</div> });
                 this.getCurrentMemos();
             }
-            else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">error: message could not be added</div> }) }
+            else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">Error: message could not be added</div> }) }
 
         });
     }
@@ -196,19 +247,60 @@ export default class AdminHome extends Component {
 
         let bodyText = document.getElementById('new-message').value;
         console.log(bodyText);
+        if (bodyText.length > 0) {
 
-        fetch('/addMemo', {
-            method: 'POST',
-            body: bodyText,
-            headers: { "Content-Type": "text/plain" }
-        }).then(response => {
-            if (response.status == 200) {
-                this.setState({ statusMsg: <div class="alert alert-success" role="alert">message added!</div> });
-                this.getCurrentMemos();
-            }
-            else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">error: message could not be added</div> }) }
+            fetch('/addMemo', {
+                method: 'POST',
+                body: bodyText,
+                headers: { "Content-Type": "text/plain" }
+            }).then(response => {
+                if (response.status == 200) {
+                    this.setState({ statusMsg: <div class="alert alert-success" role="alert">message added!</div> });
+                    document.getElementById('new-message').value = '';
+                    this.getCurrentMemos();
+                    this.getAllMemos();
+                }
+                else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">error: message could not be added</div> }) }
 
-        });
+            });
+        }
+    }
+
+    emailConfigModal() {
+        if (this.state.showEmailConfigModal) {
+            return (
+                <Modal center
+                    open={this.state.showEmailConfigModal}
+                    onClose={() => this.setState({ showEmailConfigModal: false })}>
+                    <div class='email-config-modal'>
+                        <h4>Email Config</h4>
+                        <form onSubmit={(event) => this.onClickUpdateEmailConfig(event)}>
+                            <table>
+                                <tr>
+                                    <td class='column1'>Email Address: </td>
+                                    <td class='column2'><input type="email" required
+                                        id="emailAddress"
+                                        onChange={(event) => this.onChangeEmailAddress(event)}
+                                        defaultValue={this.state.currEmailAdd}
+                                    /></td>
+                                </tr>
+                                <tr>
+                                    <td class='column1'>'From' Name: </td>
+                                    <td class='column2'><input type="text"
+                                        id="fromName"
+                                        required
+                                        onChange={(event) => this.onChangeFrom(event)}
+                                        defaultValue={this.state.currEmailFrom}
+                                    /></td>
+                                </tr>
+                            </table>
+                            <button class='btn btn-primary btn-sm' type='submit'>Update</button>&nbsp;
+                    <button class='btn btn-secondary btn-sm' onClick={(e) => { e.preventDefault(); this.setState({ showEmailConfigModal: false }); this.getCurrEmailConfig() }}>Cancel</button>
+                            {/*calls getCurrEmailConfig which resets the state to the original ones in case the user changed it and then pressed cancel, so it will still appear with the old ones when the modal opens again*/}
+                        </form>
+                    </div>
+                </Modal>);
+        }
     }
 
     render() {
@@ -256,7 +348,15 @@ export default class AdminHome extends Component {
                     </tr>
                     <tr>
                         <td>
-                        <Link class='admin-home-link' to='/searchRecipients'>Search Recipients</Link><br />
+                            <Link class='admin-home-link' to='/searchRecipients'>Search Recipients</Link><br />
+                        </td>
+                        <td>
+                            <Link class='admin-home-link' to='/editAllVolInfo'>All Volunteer Information</Link><br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class='admin-home-button' onClick={() => this.setState({ showEmailConfigModal: true })}>Email Config</button><br />
                         </td>
                     </tr>
                 </table>
@@ -281,27 +381,59 @@ export default class AdminHome extends Component {
                 <Modal center
                     open={this.state.showMemoModal}
                     onClose={() => this.setState({ showMemoModal: false })}>
-                    <div class='update-vol-status-modal'>
+                    <div class='memo-modal'>
                         <h4>Choose a memo or create a new one</h4><br />
                         <select id="select" onChange={event => this.onChangeMemo(event)}>
-                            <option>&nbsp;</option>
+                            <option id='placeholder'>Choose a previously used memo</option>
                             {this.state.memos}
-                        </select> <button class='btn btn-info btn-sm' onClick={(event) => this.onClickSelect(event)}>select</button>
+                        </select> <button class='btn btn-info btn-sm' onClick={(event) => this.onClickSelect(event)}>Select</button>
                         <br />
-                        <textarea id='new-message' />
+                        <textarea id='new-message' placeholder='Type a new memo...' /><br />
 
-                        <button class='btn btn-info btn-sm' onClick={(event) => this.onClickAdd(event)}>Add</button>&nbsp;
-                        <button class='btn btn-secondary btn-sm' onClick={() => this.setState({ showMemoModal: false })}>Cancel</button>
+                        <button class='btn btn-info btn-sm add-new-memo-btn' onClick={(event) => this.onClickAdd(event)}>Add</button>&nbsp;
+                       {/* <button class='btn btn-secondary btn-sm' onClick={() => this.setState({ showMemoModal: false })}>Cancel</button>*/}
 
+                        <br /><br />
+                        <div class='remove-memos'>
+                            <h5>Select Memos to Remove</h5>
+                            {this.state.currentMemos}
+                            <br/><button class='btn btn-secondary btn-sm' onClick={() => this.removeMemos()}>Remove</button>
+                        </div>
                     </div>
-                    <div>
-                        <h6>select memos to remove</h6>
-                        {this.state.currentMemos}
-                        <button onClick={() => this.removeMemos()}>remove</button>
-                    </div>
-
-
                 </Modal>
+
+                <Modal center
+                    open={this.state.showEmailConfigModal}
+                    onClose={() => this.setState({ showEmailConfigModal: false })}>
+                    <div class='email-config-modal'>
+                        <h4>Email Config</h4>
+                        <form onSubmit={(event) => this.onClickUpdateEmailConfig(event)}>
+                            <table>
+                                <tr>
+                                    <td class='column1'>Email Address: </td>
+                                    <td class='column2'><input type="email" required
+                                        id="emailAddress"
+                                        onChange={(event) => this.onChangeEmailAddress(event)}
+                                        defaultValue={this.state.currEmailAdd}
+                                    /></td>
+                                </tr>
+                                <tr>
+                                    <td class='column1'>'From' Name: </td>
+                                    <td class='column2'><input type="text"
+                                        id="fromName"
+                                        required
+                                        onChange={(event) => this.onChangeFrom(event)}
+                                        defaultValue={this.state.currEmailFrom}
+                                    /></td>
+                                </tr>
+                            </table>
+                            <button class='btn btn-info btn-sm' type='submit'>Update</button>&nbsp;
+                    <button class='btn btn-secondary btn-sm' onClick={(e) => { e.preventDefault(); this.setState({ showEmailConfigModal: false }); this.getCurrEmailConfig() }}>Cancel</button>
+                            {/*calls getCurrEmailConfig which resets the state to the original ones in case the user changed it and then pressed cancel, so it will still appear with the old ones when the modal opens again*/}
+                        </form>
+                    </div>
+                </Modal>
+                {/*this.emailConfigModal()*/}
             </Fragment>
         );
     }

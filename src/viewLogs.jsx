@@ -81,7 +81,7 @@ export default class ViewLogs extends Component {
                                 <td class='vl2 title-case'>{i.volunteer}</td>
                                 <td class='vl3'>{this.getDate(i.date.toString())}</td>
                                 <td class='vl4'>{this.getPhone(i.phone)}</td>
-                                <td class='vl6'>{i.partner? i.partner: 'No partner selected.'}</td>
+                                <td class='vl6 title-case'>{i.partner ? i.partner : 'No partner selected.'}</td>
                             </tr>);
                     this.setState({ history: list, showHistory: true });
                 });
@@ -197,6 +197,31 @@ export default class ViewLogs extends Component {
         return newPhone;
     }
 
+    historyTable() {
+        return (
+            <Fragment>
+                <table class='title-table'>
+                    <thead>
+                        <th class='vl5'>Text</th>
+                        <th class='vl1'>Route</th>
+                        <th class='vl2'>Taken By</th>
+                        <th class='vl3'>Date</th>
+                        <th class='vl4'>Phone</th>
+                        <th class='vl6'>Partner</th>
+
+                    </thead>
+                </table>
+                <div class='route-history-table'>
+                    <table class='table table-sm'>
+                        <tbody>
+                            {this.state.history}
+                        </tbody>
+                    </table>
+                </div>
+            </Fragment>
+        );
+    }
+
     render() {
         if (!this.state.loggedIn) {
             this.props.setAdmin();
@@ -217,9 +242,6 @@ export default class ViewLogs extends Component {
                                     optional={{ val: 'placeholder', text: 'Select a Route' }}
                                     selectedRoute={val => this.onFilterByRoute(val)} />
                             </td>
-                            <td>
-                                <input class='date-input' type='date' id='selectDate' onChange={(event) => this.onFilterByDate(event)} /><br />
-                            </td>
                             <td class='vol-input'>
 
                                 <DataListInput
@@ -230,47 +252,18 @@ export default class ViewLogs extends Component {
                                     items={this.state.volNames}
                                     onSelect={this.onClickFilterByVol} />
                             </td>
+                            <td>
+                                <input class='date-input' type='date' id='selectDate' onChange={(event) => this.onFilterByDate(event)} /><br />
+                            </td>
+
                             <td class='filter-button'>
                                 <button class='clear-filter-button' onClick={() => this.onClickClearFilter()}>Clear Filter</button>
                             </td>
                         </table>
 
-                        <table class='title-table'>
-                            <thead>
-                                <th class='vl5'>Text</th>
-                                <th class='vl1'>Route</th>
-                                <th class='vl2'>Taken By</th>
-                                <th class='vl3'>Date</th>
-                                <th class='vl4'>Phone</th>
-                                <th class='vl6'>Partner</th>
-
-                            </thead>
-                        </table>
-                        <div class='route-history-table'>
-                            <table class='table table-sm'>
-                                <tbody>
-                                    {this.state.history}
-                                </tbody>
-                            </table>
-                        </div>
-                        <PrintComponents trigger={<button class='btn btn-secondary'>Print</button>}>
-                            <table class='title-table'>
-                                <thead>
-                                    <th class='vl5'>Text</th>
-                                    <th class='vl1'>Route</th>
-                                    <th class='vl2'>Taken By</th>
-                                    <th class='vl3'>Date</th>
-                                    <th class='vl4'>Phone</th>
-                                    <th class='vl6'>Partner</th>
-                                </thead>
-                            </table>
-                            <div class='route-history-table'>
-                                <table class='table table-sm'>
-                                    <tbody>
-                                        {this.state.history}
-                                    </tbody>
-                                </table>
-                            </div>
+                        {this.historyTable()}
+                        <PrintComponents trigger={<button class='btn btn-secondary print-history-btn'>Print</button>}>
+                            {this.historyTable()}
                         </PrintComponents>
                     </div>
 

@@ -371,7 +371,7 @@ export default class VolInfo extends Component {
                         var list = data.map(
                             i => <tr class='thick-bottom-border'>
                                 <td class='route-table-size'>{i.familySize}</td>
-                                <td class='route-table-name'>{i.fName} {i.lName}</td>
+                                <td class='route-table-name'>{i.lName}, {i.fName}</td>
                                 <td class='route-table-address'>{i.addressLine1}, &nbsp; {i.addressLine2}</td>
                                 <td class='route-table-city'>{i.city}</td>
                                 <td class='route-table-phone'>{this.getPhone(i.phone)}</td>
@@ -642,7 +642,7 @@ export default class VolInfo extends Component {
                     </tr>
                     <tr>
                         <td class='column1'>Name:</td>
-                        <td class='column2 title-case' colspan='2'>{this.props.currentVolunteer.firstName}&nbsp;{this.props.currentVolunteer.lastName}</td>
+                        <td class='column2 title-case' colspan='2'>{this.props.currentVolunteer.lastName},&nbsp;{this.props.currentVolunteer.firstName}</td>
                     </tr>
                     <tr>
                         <td class='column1'>Phone Number:</td>

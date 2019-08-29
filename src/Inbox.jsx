@@ -236,7 +236,6 @@ export default class Inbox extends Component {
 
     }
     onClickContact(e) {
-
         let from = e.target.id;
         let fromName = document.getElementById(from).innerHTML;
 
@@ -249,6 +248,7 @@ export default class Inbox extends Component {
             this.getContacts();
         };
         this.setState({
+            statusMsg: <div class="alert alert-secondary" role="alert">Loading Messages...</div>,
             selectedContact: from,
             contactName: fromName,
             showMessages: false,
@@ -286,7 +286,7 @@ export default class Inbox extends Component {
     }
     onClickRefresh() {
 
-        let cb=()=> {
+        let cb = () => {
             this.getContacts();
             this.getMessages();
         }
@@ -346,8 +346,8 @@ export default class Inbox extends Component {
         if (element) {
             element.scrollIntoView({ block: "start", inline: "nearest" });
             element.click();
-        }else{
-            window.InboxComponent.setState({selectedContact:'', messages:'', contactName: 'No recent conversations found'});
+        } else {
+            window.InboxComponent.setState({ selectedContact: '', messages: '', contactName: 'No recent conversations found' });
         }
     }
 
@@ -370,8 +370,8 @@ export default class Inbox extends Component {
                         <div class='contacts-container'>
                             <div class='search-contacts-container'>
                                 <DataListInput inputClassName={'contact-search'} itemClassName={'volunteer-input'}
-                                dropDownLength={'6'} placeholder={'Search Contacts...'} items={this.state.volNames}
-                                dropdownClassName={/*'contact-search'*/''} onSelect={this.onChangeContactSearch} />
+                                    dropDownLength={'6'} placeholder={'Search Contacts...'} items={this.state.volNames}
+                                    dropdownClassName={/*'contact-search'*/''} onSelect={this.onChangeContactSearch} />
                             </div>
                             <div class='contacts-scroll-container'>
                                 <table class='contacts-table'>

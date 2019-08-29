@@ -83,7 +83,7 @@ export default class AdminHome extends Component {
         let table =
             <tr id={route_ID} class='thick-bottom-border'>
                 <td class='route-table-size'>{familySize}</td>
-                <td class='route-table-name'>{fName} {lName}</td>
+                <td class='route-table-name'>{lName}, {fName} </td>
                 <td class='route-table-address'>{addressLine1}, &nbsp; {addressLine2}</td>
                 <td class='route-table-city'>{city}</td>
                 <td class='route-table-phone'>{this.getPhone(phone)}</td>

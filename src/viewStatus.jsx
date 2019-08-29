@@ -67,7 +67,7 @@ export default class ViewStatus extends Component {
                 response.json().then(data => {
                     var list = data.map(
                         i => <tr>
-                            <td id='text-td'>{i.route_ID}</td> <td>{i.name}</td><td>{this.getPhone(i.phone)}</td><td>{this.getDate(i.activityTime)}</td>
+                            <td id='text-td'>{i.route_ID}</td> <td class='title-case'>{i.name}</td><td>{this.getPhone(i.phone)}</td><td>{this.getDate(i.activityTime)}</td>
                             <td><button id={i.phone} onClick={e => this.textProcessedRoute(e)}>&#128241;</button></td>
                         </tr>);
                     this.setState({ processedRoutes: list, showProcessedRoutes: true });

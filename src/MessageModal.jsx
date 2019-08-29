@@ -54,7 +54,7 @@ export default class MessageModal extends Component {
         }).then(response => {
             if (response.status === 200) {
                 this.closeConfirmModal();
-                this.props.setStatusMsg(<div class="alert alert-success" role="alert">Email sent successfully!</div>);
+                window.alert('Email sent successfully!');
                 this.resetState();
             }
             else if (response.status === 401) {
@@ -62,7 +62,7 @@ export default class MessageModal extends Component {
             }
             else {
                 this.closeConfirmModal();
-                this.props.setStatusMsg(<div class="alert alert-danger" role="alert">Error...email could not be sent</div>);
+                window.alert('Error...email could not be sent');
                 this.resetState();
             }
         });
@@ -79,12 +79,12 @@ export default class MessageModal extends Component {
 
             if (response.status === 200) {
                 this.closeConfirmModal();
-                this.props.setStatusMsg(<div class="alert alert-success" role="alert">Text sent successfully!</div>);
+                window.alert('Text sent successfully!');
                 this.resetState();
             }
             else {
                 this.closeConfirmModal();
-                this.props.setStatusMsg(<div class="alert alert-danger" role="alert">Error...text could not be sent</div>);
+                window.alert('Error...text could not be sent');
                 this.resetState();
             }
         });

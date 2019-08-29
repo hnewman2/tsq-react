@@ -3,10 +3,12 @@ import { Component, Fragment } from 'react';
 import { Redirect } from 'react-router-dom';
 import './InboxStyles.css';
 import Cookies from 'js-cookie';
-import DataListInput from 'react-datalist-input';
 import ReactDataGrid from 'react-data-grid';
 import { Editors } from "react-data-grid-addons";
+import PrintComponents from 'react-print-components';
+
 const { DropDownEditor } = Editors;
+
 
 export default class EditAllVolInfo extends Component {
 
@@ -16,6 +18,7 @@ export default class EditAllVolInfo extends Component {
         window.EditAllVolInfo = this;
 
         this.state = {
+            loggedIn: true,
             columns: [],
 
             rows: [],
@@ -64,6 +67,7 @@ export default class EditAllVolInfo extends Component {
             { key: 'isActive', name: 'Is Active', editable: true, editor: IssueTypeEditor },
             { key: 'primaryRoute_id', name: 'Primary Route', editable: true },
             { key: 'shul_ID', name: 'Shul', editable: true, editor: IssueTypeEditorShul },
+            {key:'editVolTypes', name: 'edit vol types'},
         ].map(c => ({ ...c, ...defaultColumnProperties }));
 
         this.setState({ columns: cols });
@@ -103,15 +107,41 @@ export default class EditAllVolInfo extends Component {
         });
     }
     componentDidMount() {
+
+        fetch("/authorizeAdmin", {
+            method: "POST",
+        }).then(response => {
+            if (response.status === 200) {
+                this.setState({ loggedIn: true });
+                Cookies.set('headerTitle', 'All Volunteer Information');
+                this.props.setHeaderTitle('All Volunteer Information');
+            }
+            else {
+                this.setState({ loggedIn: false });
+            }
+        });
+
         this.getShulDropDown();
         this.getStateDropDown();
         //this.setUpCols();
         this.getVolInfo();
 
 
-     /*   const sortRows = (initialRows, sortColumn, sortDirection) => rows => {
-            const comparer = (a, b) => {
-              if (sortDirection === "ASC") {]=
+        /*   const sortRows = (initialRows, sortColumn, sortDirection) => rows => {
+               const comparer = (a, b) => {
+                 if (sortDirection === "ASC") {]=
+                   return a[sortColumn] > b[sortColumn] ? 1 : -1;
+                 } else if (sortDirection === "DESC") {
+                   return a[sortColumn] < b[sortColumn] ? 1 : -1;
+                 }
+               };
+               return sortDirection === "NONE" ? initialRows : [...rows].sort(comparer);
+             };*/
+    }
+
+    /*  sortRows(initialRows, sortColumn, sortDirection){
+          const comparer = (a, b) => {
+              if (sortDirection === "ASC") {
                 return a[sortColumn] > b[sortColumn] ? 1 : -1;
               } else if (sortDirection === "DESC") {
                 return a[sortColumn] < b[sortColumn] ? 1 : -1;
@@ -119,19 +149,7 @@ export default class EditAllVolInfo extends Component {
             };
             return sortDirection === "NONE" ? initialRows : [...rows].sort(comparer);
           };*/
-    }
 
-  /*  sortRows(initialRows, sortColumn, sortDirection){
-        const comparer = (a, b) => {
-            if (sortDirection === "ASC") {
-              return a[sortColumn] > b[sortColumn] ? 1 : -1;
-            } else if (sortDirection === "DESC") {
-              return a[sortColumn] < b[sortColumn] ? 1 : -1;
-            }
-          };
-          return sortDirection === "NONE" ? initialRows : [...rows].sort(comparer);
-        };*/
-    
 
     getVolInfo() {
         let rows = 0;
@@ -156,8 +174,8 @@ export default class EditAllVolInfo extends Component {
                             sendEmail: v.sendEmail == 0 ? 'false' : 'true',
                             isActive: v.isActive == 0 ? 'false' : 'true',
                             primaryRoute_id: v.primaryRouteID,
-                            shul_ID: v.name
-
+                            shul_ID: v.name,
+                            editVolTypes: <button onClick={()=>console.log('button was clicked!')}>view and edit vol types</button>
                         });
                     });
                     data.forEach(() => ++rows);
@@ -168,7 +186,7 @@ export default class EditAllVolInfo extends Component {
     }
 
 
-    
+
 
     onGridRowsUpdated = ({ fromRow, toRow, updated }) => {
 
@@ -178,10 +196,10 @@ export default class EditAllVolInfo extends Component {
 
         let derivedKey = Object.keys(updated);
 
-          if(derivedKey == 'state'){
-              let value = updated[derivedKey].id;
-              console.log('in the if(){} the value is: '+value);
-          }
+        if (derivedKey == 'state') {
+            let value = updated[derivedKey].id;
+            console.log('in the if(){} the value is: ' + value);
+        }
 
         let value = updated[derivedKey];
         let volID = this.state.rows[toRow].id;
@@ -215,20 +233,38 @@ export default class EditAllVolInfo extends Component {
         });
     };
 
+    volSheet(){
+        return(
+            <ReactDataGrid
+                    columns={window.EditAllVolInfo.state.columns}
+                    rowGetter={i => window.EditAllVolInfo.state.rows[i]}
+                    rowsCount={window.EditAllVolInfo.state.rowCount}
+                    minHeight={520}
+                    minWidth={1440}
+                    enableCellSelect={true}
+                    onGridRowsUpdated={this.onGridRowsUpdated}
+                    onGridSort={(sortColumn, sortDirection) => console.log('sortColumn has: ' + sortColumn
+                        + '\n sortDirection has: ' + sortDirection)
+                        /*  setRows(sortRows(initialRows, sortColumn, sortDirection))*/
+                    } />
+        );
+    }
+
     render() {
+
+        if (!this.state.loggedIn) {
+            this.props.setAdmin();
+            return <Redirect to="/signIn" />;
+        }
+
         return (
 
-            <ReactDataGrid
-                columns={window.EditAllVolInfo.state.columns}
-                rowGetter={i => window.EditAllVolInfo.state.rows[i]}
-                rowsCount={window.EditAllVolInfo.state.rowCount}
-                minHeight={600}
-                enableCellSelect={true}
-                onGridRowsUpdated={this.onGridRowsUpdated}
-                onGridSort={(sortColumn, sortDirection) => console.log('sortColumn has: ' + sortColumn
-                + '\n sortDirection has: '+ sortDirection)
-                  /*  setRows(sortRows(initialRows, sortColumn, sortDirection))*/
-                  } />
+            <div class='vol-excel-page'>
+                {this.volSheet()}
+                <PrintComponents trigger={<button class='btn btn-secondary print-volinfo-btn'>Print</button>}>
+                            {this.volSheet()}
+                </PrintComponents>
+            </div>
         );
     }
 }

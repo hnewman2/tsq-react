@@ -364,29 +364,45 @@ li {
     text-align: left;
 }
 
+
+/* 
+vl5 - text
+vl1 - route
+vl2 - taken by
+vl3 - date
+vl4 - phone
+vl6 - partner
+*/
+
 .vl1 {
     text-align: center;
     font-weight: bold;
 }
 
-.vl1,
+.vl1 {
+    width: 8%;
+}
+
 .vl5 {
     width: 6%;
 }
 
-.vl3,
+.vl3 {
+    width: 18%;
+}
+
 .vl4 {
     width: 20%;
+}
+
+.vl5 {
+    text-align: center;
 }
 
 .vl2,
 .vl6 {
     width: 24%;
     text-align: left;
-}
-
-.vl5 {
-    text-align: right;
 }
 
 .table thead .vl5 {
@@ -420,7 +436,6 @@ li {
 
 .filter {
     font-size: 25px;
-    width: 6%;
 }
 
 #routeNums {
@@ -436,8 +451,8 @@ li {
     float: right;
 }
 
-.routes-dropdown {
-    width: 27%;
+.print-history-btn {
+    margin-top: 5px;
 }
 
 
@@ -453,6 +468,23 @@ li {
 
 .recipients-input {
     text-transform: capitalize;
+}
+
+
+/*Edit All Vol Info Page*/
+
+.vol-excel-page {
+    height: 87%;
+    width: 98%;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 4%;
+    text-align: center;
+}
+
+.print-volinfo-btn {
+    width: 100%;
+    margin-top: 3px;
 }
 
 

@@ -6,7 +6,7 @@
     margin-right: 12.5%;
     margin-top: 3%;
     border-collapse: separate;
-    border-spacing: 15px;
+    border-spacing: 10px;
 }
 
 .admin-home-link,
@@ -17,9 +17,9 @@
     background-color: rgb(111, 184, 187);
     color: white;
     border: none;
-    font-size: 2em;
+    font-size: 1.5em;
     text-decoration: none;
-    padding: 40px;
+    padding: 20px;
 }
 
 .admin-home-link {
@@ -28,7 +28,7 @@
 
 .admin-home-table tr td {
     width: 25vh;
-    min-height: 15vh;
+    min-height: 10vh;
     vertical-align: middle;
     text-align: center;
 }
@@ -39,4 +39,43 @@
     background-color: lightslategray;
     color: white;
     border: none;
+}
+
+.email-config-modal form input {
+    width: 20em;
+}
+
+.email-config-modal button {
+    float: right;
+    margin-top: 3px;
+    margin-left: 2px;
+}
+
+.memo-modal {
+    text-align: center;
+}
+
+.memo-modal h4 {
+    padding-top: 9px;
+}
+
+.memo-modal textarea {
+    width: 89%;
+    margin-top: 3px;
+}
+
+.add-new-memo-btn {
+    width: 89%;
+}
+
+.remove-memos {
+    text-align: left;
+    border: 1px dashed gray;
+    /* width: 89%;*/
+    padding: 2px;
+}
+
+.remove-memos button {
+    margin-top: 6px;
+    float: right;
 }
