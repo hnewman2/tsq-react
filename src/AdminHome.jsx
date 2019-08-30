@@ -161,10 +161,10 @@ export default class AdminHome extends Component {
             headers: { "Content-Type": "application/json" }
         }).then(response => {
             if (response.status == 200) {
-                this.setState({ statusMsg: <div class="alert alert-success" role="alert">Message removed</div>, memosToRemove: [] });
+               
                 this.getCurrentMemos();
             }
-            else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">Error: message could not be removed</div>, memosToRemove: [] }) }
+          
 
         });
     }
@@ -223,7 +223,7 @@ export default class AdminHome extends Component {
     }
     onClickSelect() {
 
-        if(this.state.selectedText === 'placeholder' || this.state.selectedText=== ''){
+        if (this.state.selectedText === 'placeholder' || this.state.selectedText === '') {
             return;
         }
 
@@ -234,10 +234,10 @@ export default class AdminHome extends Component {
             headers: { "Content-Type": "text/plain" }
         }).then(response => {
             if (response.status == 200) {
-                this.setState({ statusMsg: <div class="alert alert-success" role="alert">Message added!</div> });
+                
                 this.getCurrentMemos();
             }
-            else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">Error: message could not be added</div> }) }
+           
 
         });
     }
@@ -255,12 +255,12 @@ export default class AdminHome extends Component {
                 headers: { "Content-Type": "text/plain" }
             }).then(response => {
                 if (response.status == 200) {
-                    this.setState({ statusMsg: <div class="alert alert-success" role="alert">message added!</div> });
+                    
                     document.getElementById('new-message').value = '';
                     this.getCurrentMemos();
                     this.getAllMemos();
                 }
-                else { this.setState({ statusMsg: <div class="alert alert-danger" role="alert">error: message could not be added</div> }) }
+                
 
             });
         }
@@ -314,30 +314,30 @@ export default class AdminHome extends Component {
             <Fragment>
                 {this.state.statusMsg}
                 <table class='admin-home-table'>
-                    <tr>
-                        <td>
-                            <Link class='admin-home-link' to='/routesImport'>Import routes</Link>
-                        </td>
+                    <tr> <td>
+                        <Link class='admin-home-link' to='/viewStatus'>Route Status</Link><br />
+                    </td>
                         <td>
                             <Link class='admin-home-link' to='/messages'>Send Messages</Link><br />
                         </td>
-                    </tr>
-                    <tr>
                         <td>
-                            <Link class='admin-home-link' to='/viewStatus'>Route Status</Link><br />
+                            <Link class='admin-home-link' to='/editAllVolInfo'>All Volunteer Information</Link><br />
                         </td>
-                        <td>
-                            <Link class='admin-home-link' to='/smsInbox'>SMS Inbox </Link><br />
-                        </td>
+
                     </tr>
+
                     <tr>
                         <td>
                             <Link class='admin-home-link' to='/viewLogs'>View Route History</Link><br />
                         </td>
                         <td>
-                            <button class='admin-home-button' onClick={() => this.setState({ showUpdateModal: true })}>Mark Volunteer as Inactive</button><br />
+                            <Link class='admin-home-link' to='/smsInbox'>SMS Inbox </Link><br />
+                        </td>
+                        <td>
+                            <Link class='admin-home-link' to='/searchRecipients'>Search Recipients</Link><br />
                         </td>
                     </tr>
+
                     <tr>
                         <td>
                             <Link class='admin-home-link' to='/RoutesPrintout'>View or Print routes</Link><br />
@@ -345,20 +345,20 @@ export default class AdminHome extends Component {
                         <td>
                             <button class='admin-home-button' onClick={() => this.setState({ showMemoModal: true })}>Set Memo to Print</button><br />
                         </td>
-                    </tr>
-                    <tr>
                         <td>
-                            <Link class='admin-home-link' to='/searchRecipients'>Search Recipients</Link><br />
-                        </td>
-                        <td>
-                            <Link class='admin-home-link' to='/editAllVolInfo'>All Volunteer Information</Link><br />
+                            <button class='admin-home-button' onClick={() => this.setState({ showUpdateModal: true })}>Mark Volunteer as Inactive</button><br />
                         </td>
                     </tr>
+
                     <tr>
+                        <td>
+                            <Link class='admin-home-link' to='/routesImport'>Import routes</Link>
+                        </td>
                         <td>
                             <button class='admin-home-button' onClick={() => this.setState({ showEmailConfigModal: true })}>Email Config</button><br />
                         </td>
                     </tr>
+
                 </table>
 
 
@@ -382,22 +382,22 @@ export default class AdminHome extends Component {
                     open={this.state.showMemoModal}
                     onClose={() => this.setState({ showMemoModal: false })}>
                     <div class='memo-modal'>
-                        <h4>Choose a memo or create a new one</h4><br />
+                        <h4>Route Sheet Memos</h4><br />
                         <select id="select" onChange={event => this.onChangeMemo(event)}>
                             <option id='placeholder'>Choose a previously used memo</option>
                             {this.state.memos}
                         </select> <button class='btn btn-info btn-sm' onClick={(event) => this.onClickSelect(event)}>Select</button>
                         <br />
+                        <div class='add-new-memo-div'>
                         <textarea id='new-message' placeholder='Type a new memo...' /><br />
 
-                        <button class='btn btn-info btn-sm add-new-memo-btn' onClick={(event) => this.onClickAdd(event)}>Add</button>&nbsp;
-                       {/* <button class='btn btn-secondary btn-sm' onClick={() => this.setState({ showMemoModal: false })}>Cancel</button>*/}
+                        <button class='btn btn-info btn-sm add-new-memo-btn' onClick={(event) => this.onClickAdd(event)}>Add</button>&nbsp;</div>
 
                         <br /><br />
                         <div class='remove-memos'>
                             <h5>Select Memos to Remove</h5>
                             {this.state.currentMemos}
-                            <br/><button class='btn btn-secondary btn-sm' onClick={() => this.removeMemos()}>Remove</button>
+                            <br /><button class='btn btn-secondary btn-sm' onClick={() => this.removeMemos()}>Remove</button>
                         </div>
                     </div>
                 </Modal>
@@ -425,6 +425,9 @@ export default class AdminHome extends Component {
                                         onChange={(event) => this.onChangeFrom(event)}
                                         defaultValue={this.state.currEmailFrom}
                                     /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan='2'>*Please note that settings may need to be changed to allow less secure apps on your gmail account</td>
                                 </tr>
                             </table>
                             <button class='btn btn-info btn-sm' type='submit'>Update</button>&nbsp;

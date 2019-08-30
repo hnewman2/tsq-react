@@ -27,7 +27,7 @@
 }
 
 .admin-home-table tr td {
-    width: 25vh;
+    width: 16.5vh;
     min-height: 10vh;
     vertical-align: middle;
     text-align: center;
@@ -53,6 +53,7 @@
 
 .memo-modal {
     text-align: center;
+    width: 75vh;
 }
 
 .memo-modal h4 {
@@ -60,22 +61,32 @@
 }
 
 .memo-modal textarea {
-    width: 89%;
+    width: 100%;
     margin-top: 3px;
 }
 
 .add-new-memo-btn {
-    width: 89%;
+    float: right;
 }
 
 .remove-memos {
     text-align: left;
     border: 1px dashed gray;
-    /* width: 89%;*/
+    width: 89%;
     padding: 2px;
+    display: inline-block;
 }
 
 .remove-memos button {
     margin-top: 6px;
     float: right;
+}
+
+.add-new-memo-div{
+    width: 89%;
+    display: inline-block;
+}
+
+#select{
+    width: 27em;
 }

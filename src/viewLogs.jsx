@@ -77,7 +77,7 @@ export default class ViewLogs extends Component {
                         i =>
                             <tr id={i.isActive ? '' : 'isActive-tr'}>
                                 <td class='vl5'><button id={i.phone} onClick={(event) => this.onClickSendText(event)}>&#128241;</button></td>
-                                <td class='vl1'>{i.route_ID}</td>
+                                <td class='vl1'>{i.route_ID}{i.type == '0'?'-pu':''}</td>
                                 <td class='vl2 title-case'>{i.volunteer}</td>
                                 <td class='vl3'>{this.getDate(i.date.toString())}</td>
                                 <td class='vl4'>{this.getPhone(i.phone)}</td>

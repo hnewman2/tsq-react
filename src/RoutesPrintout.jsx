@@ -130,9 +130,9 @@ export default class AdminHome extends Component {
             let table = <div class='pg-brk'>
                 <table class="route-table" id={i.route_ID}>
                     <thead>
-                        <tr><th class='route-table-id' colspan='6'>Route {i.route_ID}</th></tr>
+                        <tr><th class='route-table-id' colspan='6'>Route {i.route_ID}{i.type == '0'?'-pu':''}</th></tr>
                         <tr class='route-table-header-row'>
-                            <th class='route-table-size'>Qty</th>
+                            <th class='route-table-size'>Ppl</th>
                             <th class='route-table-name'>Name</th>
                             <th class='route-table-address'>Address</th>
                             <th class='route-table-city'>City</th>
@@ -289,8 +289,8 @@ export default class AdminHome extends Component {
                                 <td><input type='password' autoComplete='new-password' onChange={(e) => this.setState({ password: e.target.value })} /></td>
                             </tr>
                             </table><br/>
-                            <button class='btn btn-secondary' onClick={() => this.onClickSendRouteEmail()}>Send</button>
-                            &nbsp;<button class='btn btn-info' onClick={() => this.setState({ showEmailModal: false })}>Cancel</button>
+                            <button class='btn btn-info' onClick={() => this.onClickSendRouteEmail()}>Send</button>
+                            &nbsp;<button class='btn btn-secondary' onClick={() => this.setState({ showEmailModal: false })}>Cancel</button>
                     </div>
                 </Modal>
             </Fragment>

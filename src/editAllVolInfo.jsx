@@ -11,6 +11,26 @@ import ReactToExcel from 'react-html-table-to-excel';
 const { DropDownEditor } = Editors;
 
 
+const sortRowsConst = (sortColumn, sortDirection) => {
+    return rows => {
+        console.log('got to sortRows');
+        const comparer = (a, b) => {
+            console.log('got to testing sortDirection');
+            if (sortDirection === "ASC") {
+    
+                console.log('sortDirection is ASC');
+                return a[sortColumn] > b[sortColumn] ? 1 : -1;
+            } else if (sortDirection === "DESC") {
+                console.log('sortDirection is DESC');
+                return a[sortColumn] < b[sortColumn] ? 1 : -1;
+            }
+        };
+        console.log('atempting to return...');
+        return [...rows].sort(comparer);
+    }
+}
+ ;
+
 export default class EditAllVolInfo extends Component {
 
 
@@ -21,7 +41,6 @@ export default class EditAllVolInfo extends Component {
         this.state = {
             loggedIn: true,
             columns: [],
-
             rows: [],
             rowCount: 0,
             boolDropDown: [],
@@ -35,6 +54,8 @@ export default class EditAllVolInfo extends Component {
         this.getShulDropDown = this.getShulDropDown.bind(this);
     }
 
+
+
     setUpCols() {
 
 
@@ -43,8 +64,8 @@ export default class EditAllVolInfo extends Component {
             width: 120,
             sortable: true
         };
-        const boolDROptions = [{ id: 0, value: 'no' },
-        { id: 1, value: 'yes' }];
+        const boolDROptions = [{ id: 0, value: false },
+        { id: 1, value: true }];
         const IssueTypeEditor = <DropDownEditor options={boolDROptions} />;
 
         const shulDROptions = this.state.shulDR;
@@ -69,7 +90,7 @@ export default class EditAllVolInfo extends Component {
             { key: 'isActive', name: 'Is Active', editable: true, editor: IssueTypeEditor },
             { key: 'primaryRoute_id', name: 'Primary Route', editable: true },
             { key: 'Shuls', name: 'Shul', editable: true, editor: IssueTypeEditorShul },
-            { key: 'editVolTypes', name: 'edit vol types' },
+            { key: 'volTypes', name: 'Volunteer types' },
         ].map(c => ({ ...c, ...defaultColumnProperties }));
 
         this.setState({ columns: cols });
@@ -128,30 +149,7 @@ export default class EditAllVolInfo extends Component {
         //this.setUpCols();
         this.getVolInfo();
 
-
-        /*   const sortRows = (initialRows, sortColumn, sortDirection) => rows => {
-               const comparer = (a, b) => {
-                 if (sortDirection === "ASC") {]=
-                   return a[sortColumn] > b[sortColumn] ? 1 : -1;
-                 } else if (sortDirection === "DESC") {
-                   return a[sortColumn] < b[sortColumn] ? 1 : -1;
-                 }
-               };
-               return sortDirection === "NONE" ? initialRows : [...rows].sort(comparer);
-             };*/
     }
-
-    /*  sortRows(initialRows, sortColumn, sortDirection){
-          const comparer = (a, b) => {
-              if (sortDirection === "ASC") {
-                return a[sortColumn] > b[sortColumn] ? 1 : -1;
-              } else if (sortDirection === "DESC") {
-                return a[sortColumn] < b[sortColumn] ? 1 : -1;
-              }
-            };
-            return sortDirection === "NONE" ? initialRows : [...rows].sort(comparer);
-          };*/
-
 
     getVolInfo() {
 
@@ -180,13 +178,13 @@ export default class EditAllVolInfo extends Component {
                 States: v.abbr,
                 zip: v.zip,
                 phone: v.phone,
-                sendSMS: v.sendSMS == 0 ? 'no' : 'yes',
+                sendSMS: v.sendSMS == 0 ? 'false' : 'true',
                 email: v.email,
-                sendEmail: v.sendEmail == 0 ? 'no' : 'yes',
-                isActive: v.isActive == 0 ? 'no' : 'yes',
+                sendEmail: v.sendEmail == 0 ? 'false' : 'true',
+                isActive: v.isActive == 0 ? 'false' : 'true',
                 primaryRoute_id: v.primaryRouteID,
                 Shuls: v.name,
-                editVolTypes: <button onClick={() => console.log('button was clicked!')}>view and edit vol types</button>
+                volTypes: v.VolunteerType
             });
         });
         data.forEach(() => ++rows);
@@ -205,10 +203,10 @@ export default class EditAllVolInfo extends Component {
                 <td>{v.abbr}</td>
                 <td>{v.zip}</td>
                 <td>{v.phone}</td>
-                <td>{v.sendSMS == 0 ? 'no' : 'yes'}</td>
+                <td>{v.sendSMS == 0 ? <p>&#10008;</p> : <p>&#10003;</p>}</td>
                 <td>{v.email}</td>
-                <td>{v.sendEmail == 0 ? 'no' : 'yes'}</td>
-                <td>{v.isActive == 0 ? 'no' : 'yes'}</td>
+                <td>{v.sendEmail == 0 ? <p>&#10008;</p> : <p>&#10003;</p>}</td>
+                <td>{v.isActive == 0 ? <p>&#10008;</p> : <p>&#10003;</p>}</td>
                 <td>{v.primaryRouteID}</td>
                 <td>{v.name}</td>
             </tr>
@@ -233,7 +231,7 @@ export default class EditAllVolInfo extends Component {
 
 
 
-        if (derivedKey == 'States' || derivedKey =='Shuls' ) {
+        if (derivedKey == 'States' || derivedKey == 'Shuls') {
             fetch('/updateVolState', {
                 method: 'POST',
                 body: JSON.stringify(updateData),
@@ -263,7 +261,7 @@ export default class EditAllVolInfo extends Component {
         };
 
 
-        console.log('the key is:' + derivedKey);
+        console.log('the derived-key is:' + derivedKey);
         console.log('the value is:' + value);
         console.log('the ID of the row is: ' + this.state.rows[toRow].id);
 
@@ -278,21 +276,62 @@ export default class EditAllVolInfo extends Component {
     };
 
     volSheet() {
+
+        let currRows= this.state.rows;
+      let currCol= this.state.columns;
         return (
             <ReactDataGrid
-                columns={window.EditAllVolInfo.state.columns}
-                rowGetter={i => window.EditAllVolInfo.state.rows[i]}
-                rowsCount={window.EditAllVolInfo.state.rowCount}
-                //  minHeight={520}
-                //  minWidth={1440}
+                columns={currCol}
+                rowGetter={i => currRows[i]}
+                rowsCount={currRows.length}
                 enableCellSelect={true}
                 onGridRowsUpdated={this.onGridRowsUpdated}
-                onGridSort={(sortColumn, sortDirection) => console.log('sortColumn has: ' + sortColumn
-                    + '\n sortDirection has: ' + sortDirection)
-                    /*  setRows(sortRows(initialRows, sortColumn, sortDirection))*/
+                onGridSort={(sortColumn, sortDirection) => {
+                    console.log("test 1")
+                    return this.setState({rows: this.sortRows(/*initialRows,*/ sortColumn, sortDirection)})}
+                    /* console.log('sortColumn has: ' + sortColumn
+                    + '\n sortDirection has: ' + sortDirection)*/
+                    
                 } />
         );
     }
+    sortRows(sortColumn, sortDirection) {
+        console.log("test 2")
+        
+        console.log('got to sortRows');
+        const comparer = (a, b) => {
+            console.log('a: '+a);
+            if (sortDirection === "ASC") {
+    
+                console.log('sortDirection is ASC');
+                return a[sortColumn] > b[sortColumn] ? 1 : -1;
+            } else if (sortDirection === "DESC") {
+                console.log('sortDirection is DESC');
+                return a[sortColumn] < b[sortColumn] ? 1 : -1;
+            }
+        };
+        console.log('atempting to return...');
+        return [...this.state.rows].sort(comparer);
+    
+    }
+    /*
+            function comparer (a, b){
+                  if (sortDirection === "ASC") {
+            
+                    console.log('sortDirection is ASC');
+                    return a[sortColumn] > b[sortColumn] ? 1 : -1;
+                  } 
+                  else if (sortDirection === "DESC") {
+                    console.log('sortDirection is DESC');
+                    return a[sortColumn] < b[sortColumn] ? 1 : -1;
+                  }
+            };
+            console.log('atempting to return...');
+            ;
+        };*/
+
+
+
     setupTable() {
         return (<table id="tableExport">
             <thead>
@@ -317,6 +356,7 @@ export default class EditAllVolInfo extends Component {
         </table>)
     }
 
+
     render() {
 
         if (!this.state.loggedIn) {
@@ -337,7 +377,7 @@ export default class EditAllVolInfo extends Component {
                 <ReactToExcel
                     className='btn btn-secondary print-volinfo-btn'
                     table='tableExport'
-                    fileName='volunteer data'
+                    filename='volunteer data'
                     sheet='sheet 1'
                     buttonText='Export to Excel'
                 />

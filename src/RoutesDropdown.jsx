@@ -50,8 +50,8 @@ export default class RoutesDropdown extends Component {
 
         let options = this.state.routes.map(r =>
             r.route_ID == pRID ?
-                <option selected id={r.route_ID}>{r.route_ID}</option>
-                : <option >{r.route_ID}</option>
+                <option selected id={r.route_ID}>{r.route_ID}{r.type == '0'?'-pu':''}</option>
+                : <option >{r.route_ID}{r.type == '0'?'-pu':''}</option>
         );
 
         return (
