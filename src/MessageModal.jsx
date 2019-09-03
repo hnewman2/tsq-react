@@ -160,6 +160,7 @@ export default class MessageModal extends Component {
                 <Modal center
                     open={this.props.open}
                     onClose={this.props.onClose}>
+                        <div class='msg-modal'>
                     <h3>Send {this.state.isText ? 'A Text' : 'An Email'}</h3>
                     <table>
                         <tr>
@@ -172,22 +173,25 @@ export default class MessageModal extends Component {
                             <td><textarea rows="10" cols="75" defaultValue={this.state.body} onChange={event => this.onChangeBody(event)} /></td>
                         </tr>
                     </table>
-                    <button onClick={this.handleClickCancel.bind(this)}>
+                    <button class='btn btn-secondary' onClick={this.handleClickCancel.bind(this)}>
                         Cancel
                 </button>
-                    <button onClick={this.handleClickSend.bind(this)}>
+                    <button class='btn btn-info' onClick={this.handleClickSend.bind(this)}>
                         Send
                 </button>
+                </div>
                 </Modal>
 
                 <Modal center
                     open={this.state.showConfirmModal}
                     onClose={this.closeConfirmModal.bind(this)}>
                     {this.state.errorMsg}
-                    <h2>Are you sure you want to send this message?</h2><br />
-                    {this.passwordControl()}
-                    <button onClick={this.closeConfirmModal.bind(this)}>Cancel</button>
-                    <button onClick={this.state.isText ? this.SendText.bind(this) : this.SendEmail.bind(this)}>Send</button>
+                    <div class='confirm-send-msg-modal'>
+                    <h6 class='confirm-send-msg'>Are you sure you want to send this message?</h6>
+                    {/*this.passwordControl()*/}
+                    <button class='btn btn-sm btn-secondary' onClick={this.closeConfirmModal.bind(this)}>Cancel</button>&nbsp;
+                    <button class='btn btn-sm btn-info' onClick={this.state.isText ? this.SendText.bind(this) : this.SendEmail.bind(this)}>Send</button>
+                    </div>
                 </Modal>
             </Fragment>
         );

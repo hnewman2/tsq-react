@@ -284,10 +284,10 @@ export default class AdminHome extends Component {
                                 <td><input type='email'
                                     onChange={(e) => this.setState({ email: e.target.value })} /></td>
                             </tr>
-                            <tr>
+                            {/*<tr>
                                 <td>Enter password for TSQ email:</td>
                                 <td><input type='password' autoComplete='new-password' onChange={(e) => this.setState({ password: e.target.value })} /></td>
-                            </tr>
+                            </tr>*/}
                             </table><br/>
                             <button class='btn btn-info' onClick={() => this.onClickSendRouteEmail()}>Send</button>
                             &nbsp;<button class='btn btn-secondary' onClick={() => this.setState({ showEmailModal: false })}>Cancel</button>

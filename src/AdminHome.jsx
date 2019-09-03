@@ -23,7 +23,8 @@ export default class AdminHome extends Component {
             currentMemos: [],
             memosToRemove: [],
             currEmailAdd: '',
-            currEmailFrom: ''
+            currEmailFrom: '',
+            currEmailPass: ''
         }
         this.getPhone = this.getPhone.bind(this);
         this.getCurrEmailConfig = this.getCurrEmailConfig.bind(this);
@@ -67,7 +68,8 @@ export default class AdminHome extends Component {
             response.json().then(data => {
                 this.setState({
                     currEmailAdd: data[0].user,
-                    currEmailFrom: data[0].fromName
+                    currEmailFrom: data[0].fromName,
+                    currEmailPass: data[0].pswd
                 });
             });
 
@@ -79,7 +81,7 @@ export default class AdminHome extends Component {
 
         fetch('/updateEmailConfig', {
             method: 'POST',
-            body: JSON.stringify({ user: this.state.currEmailAdd, from: this.state.currEmailFrom }),
+            body: JSON.stringify({ user: this.state.currEmailAdd, from: this.state.currEmailFrom, pswd: this.state.currEmailPass }),
             headers: { "Content-Type": "application/json" }
         }).then(response => {
             if (response.status === 200) {
@@ -97,6 +99,9 @@ export default class AdminHome extends Component {
 
     onChangeFrom(e) {
         this.setState({ currEmailFrom: e.target.value });
+    }
+    onChangepass(e) {
+        this.setState({ currEmailPass: e.target.value });
     }
 
 
@@ -266,43 +271,7 @@ export default class AdminHome extends Component {
         }
     }
 
-    emailConfigModal() {
-        if (this.state.showEmailConfigModal) {
-            return (
-                <Modal center
-                    open={this.state.showEmailConfigModal}
-                    onClose={() => this.setState({ showEmailConfigModal: false })}>
-                    <div class='email-config-modal'>
-                        <h4>Email Config</h4>
-                        <form onSubmit={(event) => this.onClickUpdateEmailConfig(event)}>
-                            <table>
-                                <tr>
-                                    <td class='column1'>Email Address: </td>
-                                    <td class='column2'><input type="email" required
-                                        id="emailAddress"
-                                        onChange={(event) => this.onChangeEmailAddress(event)}
-                                        defaultValue={this.state.currEmailAdd}
-                                    /></td>
-                                </tr>
-                                <tr>
-                                    <td class='column1'>'From' Name: </td>
-                                    <td class='column2'><input type="text"
-                                        id="fromName"
-                                        required
-                                        onChange={(event) => this.onChangeFrom(event)}
-                                        defaultValue={this.state.currEmailFrom}
-                                    /></td>
-                                </tr>
-                            </table>
-                            <button class='btn btn-primary btn-sm' type='submit'>Update</button>&nbsp;
-                    <button class='btn btn-secondary btn-sm' onClick={(e) => { e.preventDefault(); this.setState({ showEmailConfigModal: false }); this.getCurrEmailConfig() }}>Cancel</button>
-                            {/*calls getCurrEmailConfig which resets the state to the original ones in case the user changed it and then pressed cancel, so it will still appear with the old ones when the modal opens again*/}
-                        </form>
-                    </div>
-                </Modal>);
-        }
-    }
-
+    
     render() {
 
         if (!this.state.loggedIn) {
@@ -386,7 +355,7 @@ export default class AdminHome extends Component {
                         <select id="select" onChange={event => this.onChangeMemo(event)}>
                             <option id='placeholder'>Choose a previously used memo</option>
                             {this.state.memos}
-                        </select> <button class='btn btn-info btn-sm' onClick={(event) => this.onClickSelect(event)}>Select</button>
+                        </select> <button class='btn btn-info btn-sm btn-select-memo' onClick={(event) => this.onClickSelect(event)}>Select</button>
                         <br />
                         <div class='add-new-memo-div'>
                         <textarea id='new-message' placeholder='Type a new memo...' /><br />
@@ -427,7 +396,16 @@ export default class AdminHome extends Component {
                                     /></td>
                                 </tr>
                                 <tr>
-                                    <td colspan='2'>*Please note that settings may need to be changed to allow less secure apps on your gmail account</td>
+                                    <td class='column1'>Password: </td>
+                                    <td class='column2'><input type="password"
+                                        id="pass"
+                                        required
+                                        onChange={(event) => this.onChangepass(event)}
+                                        defaultValue={this.state.currEmailPass}
+                                    /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan='2' class='security-notice'>*Please note that settings may need to be changed to allow less secure apps on your gmail account</td>
                                 </tr>
                             </table>
                             <button class='btn btn-info btn-sm' type='submit'>Update</button>&nbsp;

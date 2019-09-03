@@ -88,5 +88,12 @@
 }
 
 #select{
-    width: 27em;
+    width: 80%;
+}
+
+.btn-select-memo{
+    width: 8.5%;
+}
+.security-notice{
+    font-size: 11px;
 }

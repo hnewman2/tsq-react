@@ -104,7 +104,7 @@ li {
     width: 30%;
     margin-top: 3%;
     padding: 10px;
-    font-size: 20px;
+    font-size: 15px;
     text-align: center;
     height: 60%;
 }
@@ -573,4 +573,17 @@ textarea {
     max-width: 0;
     max-height: 0;
     overflow: hidden;
+}
+
+.confirm-send-msg{
+    padding-top: 20px;
+}
+
+.confirm-send-msg-modal{
+    text-align: center;
+}
+
+.msg-modal button{
+    float: right;
+    margin-right: 3px;
 }

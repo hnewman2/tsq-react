@@ -4,32 +4,23 @@ import { Redirect } from 'react-router-dom';
 import './InboxStyles.css';
 import Cookies from 'js-cookie';
 import ReactDataGrid from 'react-data-grid';
-import { Editors } from "react-data-grid-addons";
+import { Editors, Toolbar, Data } from "react-data-grid-addons";
 import PrintComponents from 'react-print-components';
 import ReactToExcel from 'react-html-table-to-excel';
 
 const { DropDownEditor } = Editors;
+const selectors = Data.Selectors;
 
-
-const sortRowsConst = (sortColumn, sortDirection) => {
-    return rows => {
-        console.log('got to sortRows');
-        const comparer = (a, b) => {
-            console.log('got to testing sortDirection');
-            if (sortDirection === "ASC") {
-    
-                console.log('sortDirection is ASC');
-                return a[sortColumn] > b[sortColumn] ? 1 : -1;
-            } else if (sortDirection === "DESC") {
-                console.log('sortDirection is DESC');
-                return a[sortColumn] < b[sortColumn] ? 1 : -1;
-            }
-        };
-        console.log('atempting to return...');
-        return [...rows].sort(comparer);
+/*const handleFilterChange = filter => filters => {
+    const newFilters = { ...filters };
+    if (filter.filterTerm) {
+      newFilters[filter.column.key] = filter;
+    } else {
+      delete newFilters[filter.column.key];
     }
-}
- ;
+    return newFilters;
+  };
+  */
 
 export default class EditAllVolInfo extends Component {
 
@@ -41,12 +32,14 @@ export default class EditAllVolInfo extends Component {
         this.state = {
             loggedIn: true,
             columns: [],
+            originalCol: [],
             rows: [],
             rowCount: 0,
             boolDropDown: [],
             stateDR: [],
             shulDR: [],
-            exportTableRows: []
+            exportTableRows: [],
+            filters:''
         }
         this.getVolInfo = this.getVolInfo.bind(this);
         this.setUpCols = this.setUpCols.bind(this);
@@ -62,7 +55,8 @@ export default class EditAllVolInfo extends Component {
         const defaultColumnProperties = {
             resizable: true,
             width: 120,
-            sortable: true
+            sortable: true,
+            filterable: true,
         };
         const boolDROptions = [{ id: 0, value: false },
         { id: 1, value: true }];
@@ -188,7 +182,7 @@ export default class EditAllVolInfo extends Component {
             });
         });
         data.forEach(() => ++rows);
-        this.setState({ rows: list, rowCount: rows });
+        this.setState({ rows: list, rowCount: rows, originalCol: list });
     }
 
     createTableExport(data) {
@@ -217,16 +211,10 @@ export default class EditAllVolInfo extends Component {
 
     onGridRowsUpdated = ({ fromRow, toRow, updated }) => {
 
-        console.log('fromRow: ' + fromRow);
-        console.log('toRow: ' + toRow);
-        console.log('updated: ' + updated);
 
         let derivedKey = Object.keys(updated);
-
-
         let value = updated[derivedKey];
         let volID = this.state.rows[toRow].id;
-
         let updateData = { key: derivedKey, value: value, id: volID }
 
 
@@ -260,12 +248,6 @@ export default class EditAllVolInfo extends Component {
             })
         };
 
-
-        console.log('the derived-key is:' + derivedKey);
-        console.log('the value is:' + value);
-        console.log('the ID of the row is: ' + this.state.rows[toRow].id);
-
-
         this.setState(state => {
             const rows = state.rows.slice();
             for (let i = fromRow; i <= toRow; i++) {
@@ -275,60 +257,44 @@ export default class EditAllVolInfo extends Component {
         });
     };
 
-    volSheet() {
-
-        let currRows= this.state.rows;
-      let currCol= this.state.columns;
-        return (
-            <ReactDataGrid
-                columns={currCol}
-                rowGetter={i => currRows[i]}
-                rowsCount={currRows.length}
-                enableCellSelect={true}
-                onGridRowsUpdated={this.onGridRowsUpdated}
-                onGridSort={(sortColumn, sortDirection) => {
-                    console.log("test 1")
-                    return this.setState({rows: this.sortRows(/*initialRows,*/ sortColumn, sortDirection)})}
-                    /* console.log('sortColumn has: ' + sortColumn
-                    + '\n sortDirection has: ' + sortDirection)*/
-                    
-                } />
-        );
-    }
+  
     sortRows(sortColumn, sortDirection) {
-        console.log("test 2")
-        
-        console.log('got to sortRows');
+
         const comparer = (a, b) => {
-            console.log('a: '+a);
+
             if (sortDirection === "ASC") {
-    
-                console.log('sortDirection is ASC');
                 return a[sortColumn] > b[sortColumn] ? 1 : -1;
             } else if (sortDirection === "DESC") {
-                console.log('sortDirection is DESC');
                 return a[sortColumn] < b[sortColumn] ? 1 : -1;
             }
         };
-        console.log('atempting to return...');
-        return [...this.state.rows].sort(comparer);
-    
+        return /*sortDirection === "NONE" ? this.state.originalCol :*/ [...this.state.rows].sort(comparer);
+
     }
-    /*
-            function comparer (a, b){
-                  if (sortDirection === "ASC") {
-            
-                    console.log('sortDirection is ASC');
-                    return a[sortColumn] > b[sortColumn] ? 1 : -1;
-                  } 
-                  else if (sortDirection === "DESC") {
-                    console.log('sortDirection is DESC');
-                    return a[sortColumn] < b[sortColumn] ? 1 : -1;
-                  }
-            };
-            console.log('atempting to return...');
-            ;
-        };*/
+   
+    getRows() {
+       
+        let rows= this.state.rows;
+        let filters= this.state.filters;
+        console.log('rows:  '+rows+'filters: ' + filters);
+        console.log( selectors.getRows({ rows, filters }));
+        this.setState({rows:selectors.getRows({ rows, filters }) });
+      }
+
+    handleFilterChange (filter)  {
+        const newFilters = { ...this.state.filter };
+        console.log('the filter term is: ' + filter.filterTerm);
+        if (filter.filterTerm) {
+            console.log('before filter: '+newFilters[filter.column.key]);
+          newFilters[filter.column.key] = filter;
+          console.log('after filter: '+ Object.keys(newFilters[filter.column.key]));
+        } else {
+            console.log('deleting filter');
+          delete newFilters[filter.column.key];
+        }
+        return newFilters;
+      };
+
 
 
 
@@ -356,6 +322,26 @@ export default class EditAllVolInfo extends Component {
         </table>)
     }
 
+    volSheet() {
+
+        let currRows = this.state.rows;
+        let currCol = this.state.columns;
+        return (
+            <ReactDataGrid
+                columns={currCol}
+                rowGetter={i => currRows[i]}
+                rowsCount={currRows.length}
+                enableCellSelect={true}
+                onGridRowsUpdated={this.onGridRowsUpdated}
+                onGridSort={(sortColumn, sortDirection) => {
+                    return this.setState({ rows: this.sortRows(sortColumn, sortDirection) })
+                }}
+                toolbar={<Toolbar enableFilter={true} />}
+                onAddFilter={filter => this.setState({filters: this.handleFilterChange(filter)}, this.getRows)}
+                onClearFilters={() => this.setState({filters:''})}
+            />
+        );
+    }
 
     render() {
 

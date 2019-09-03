@@ -749,10 +749,10 @@ export default class VolInfo extends Component {
                              <tr>
                                <td colspan='2'><input type='checkbox' onChange={(e) => this.setState({ resetEmail: e.target.checked })} />Set as Preferred Email</td>
                                </tr>
-                            <tr>
+                            {/*<tr>
                                 <td>Enter password for TSQ email:</td>
                                 <td><input type='password' autoComplete='new-password' onChange={(e) => this.setState({ password: e.target.value })} /></td>
-                            </tr>
+                            </tr>*/}
                         </table><br />
                         <button class='btn btn-info' onClick={() => this.onClickSendRouteEmail()}>Send</button>
                         &nbsp;<button class='btn btn-secondary' onClick={() => this.setState({ showEmailModal: false })}>Cancel</button>
