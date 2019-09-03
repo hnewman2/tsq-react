@@ -285,12 +285,12 @@ export default class EditAllVolInfo extends Component {
         const newFilters = { ...this.state.filter };
         console.log('the filter term is: ' + filter.filterTerm);
         if (filter.filterTerm) {
-            console.log('before filter: '+newFilters[filter.column.key]);
+            
           newFilters[filter.column.key] = filter;
-          console.log('after filter: '+ Object.keys(newFilters[filter.column.key]));
+          
         } else {
             console.log('deleting filter');
-          delete newFilters[filter.column.key];
+          this.getVolInfo();
         }
         return newFilters;
       };
