@@ -101,7 +101,7 @@ export default class EditAllVolInfo extends Component {
                         value: st.abbr
                     });
                 })
-                // console.log(list);
+                
                 this.setState({ stateDR: list }, this.setUpCols);
             })
         });
@@ -118,7 +118,7 @@ export default class EditAllVolInfo extends Component {
                         value: sh.name
                     });
                 })
-                //  console.log(list);
+           
                 this.setState({ shulDR: list }, this.setUpCols);
             })
         });
@@ -276,20 +276,19 @@ export default class EditAllVolInfo extends Component {
        
         let rows= this.state.rows;
         let filters= this.state.filters;
-        console.log('rows:  '+rows+'filters: ' + filters);
-        console.log( selectors.getRows({ rows, filters }));
+       
         this.setState({rows:selectors.getRows({ rows, filters }) });
       }
 
     handleFilterChange (filter)  {
         const newFilters = { ...this.state.filter };
-        console.log('the filter term is: ' + filter.filterTerm);
+      
         if (filter.filterTerm) {
             
           newFilters[filter.column.key] = filter;
           
         } else {
-            console.log('deleting filter');
+          
           this.getVolInfo();
         }
         return newFilters;

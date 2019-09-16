@@ -37,10 +37,10 @@ export default class ViewLogs extends Component {
 
     componentDidMount() {
 
-        /*
-        document.onclick = () => {
+
+        /*document.onclick = () => {
             this.setState({
-                statusMsg: <div class="alert alert-success" role="alert">test</div>
+                statusMsg: ''
             });
         }*/
 
@@ -66,6 +66,7 @@ export default class ViewLogs extends Component {
 
     getHistory(path, body) {
         let tableClass = '';
+        this.setState({ statusMsg: <div class="alert alert-secondary" role="alert">Loading Route History...</div> });
         fetch("/routeHistory" + path, {
             method: "POST",
             body: body,
@@ -77,23 +78,23 @@ export default class ViewLogs extends Component {
                         i =>
                             <tr id={i.isActive ? '' : 'isActive-tr'}>
                                 <td class='vl5'><button id={i.phone} onClick={(event) => this.onClickSendText(event)}>&#128241;</button></td>
-                                <td class='vl1'>{i.route_ID}{i.type == '0'?'-pu':''}</td>
+                                <td class='vl1'>{i.route_ID}{i.type == '0' ? '-pu' : ''}</td>
                                 <td class='vl2 title-case'>{i.volunteer}</td>
                                 <td class='vl3'>{this.getDate(i.date.toString())}</td>
                                 <td class='vl4'>{this.getPhone(i.phone)}</td>
                                 <td class='vl6 title-case'>{i.partner ? i.partner : 'No partner selected.'}</td>
                             </tr>);
-                    this.setState({ history: list, showHistory: true });
+                    this.setState({ history: list, showHistory: true, statusMsg: '' });
                 });
             }
             else if (response.status === 204) {
                 var list = [];
                 list.push('There is no history to match the specified filters.');
                 list = list.map(item => <tr><td colspan='3'>{item}</td></tr>);
-                this.setState({ history: list, showHistory: true });
+                this.setState({ history: list, showHistory: true, statusMsg: '' });
             }
             else {
-                this.setState({ errorMsg: <div class="alert alert-danger" role="alert">An error has occurred. Please contact IT</div> });
+                this.setState({ errorMsg: <div class="alert alert-danger" role="alert">An error has occurred. Please contact IT</div>, statusMsg: '' });
             }
         });
     }
@@ -129,7 +130,7 @@ export default class ViewLogs extends Component {
     }
 
     onClickFilterByVol(selectedVal) {
-        console.log('got to onclick filter, phone is: ' + selectedVal.key);
+      
         //event.preventDefault();
         document.getElementById('routeNums').value = 'placeholder';
         document.getElementById('selectDate').value = '';
@@ -222,17 +223,13 @@ export default class ViewLogs extends Component {
         );
     }
 
-    render() {
-        if (!this.state.loggedIn) {
-            this.props.setAdmin();
-            return <Redirect to="/signIn" />;
-        }
 
+    historyDisplay() {
         if (this.state.showHistory) {
 
             return (
                 <Fragment>
-                    {this.state.statusMsg}
+
                     <div class='view-logs'>
                         <table class='view-logs-header-table'>
                             <td class='filter'>Filter:</td>
@@ -275,5 +272,19 @@ export default class ViewLogs extends Component {
         else {
             return this.state.errorMsg;
         }
+    }
+    render() {
+        if (!this.state.loggedIn) {
+            this.props.setAdmin();
+            return <Redirect to="/signIn" />;
+        }
+
+        return (
+            <Fragment>
+                {this.state.statusMsg}
+                {this.historyDisplay()}
+            </Fragment>
+        );
+
     }
 }

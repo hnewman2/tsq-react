@@ -299,7 +299,7 @@ export default class Inbox extends Component {
         fetch("/updateInbox", {
             method: "Post"
         }).then(response => {
-            console.log(response.status);
+            
             this.setState({ showMessages: false }, cb);
         });
 

@@ -232,7 +232,7 @@ export default class AdminHome extends Component {
             return;
         }
 
-        console.log(this.state.selectedText);
+        
         fetch('/updateMemo', {
             method: 'POST',
             body: this.state.selectedText,
@@ -251,7 +251,7 @@ export default class AdminHome extends Component {
         e.preventDefault();
 
         let bodyText = document.getElementById('new-message').value;
-        console.log(bodyText);
+        
         if (bodyText.length > 0) {
 
             fetch('/addMemo', {

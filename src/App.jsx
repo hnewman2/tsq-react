@@ -39,7 +39,7 @@ class App extends Component {
                 response.json().then(data=>
                     this.setState({unreadCount:data[0].count})
                     );
-               /* console.log(response);*/
+              
             }
         });
     }
