@@ -71,8 +71,8 @@ export default class EditAllVolInfo extends Component {
 
         let cols = [
             { key: 'id', name: 'ID' },
-            { key: 'fName', name: 'First Name', editable: true },
-            { key: 'lName', name: 'Last Name', editable: true },
+            { key: 'firstName', name: 'First Name', editable: true },
+            { key: 'lastName', name: 'Last Name', editable: true },
             { key: 'address', name: 'Address', editable: true },
             { key: 'city', name: 'City', editable: true },
             { key: 'States', name: 'State', editable: true, editor: IssueTypeEditorState },
@@ -165,8 +165,8 @@ export default class EditAllVolInfo extends Component {
         let list = data.map(v => {
             return ({
                 id: v.vol_ID,
-                fName: v.firstName,
-                lName: v.lastName,
+                firstName: v.firstName,
+                lastName: v.lastName,
                 address: v.address,
                 city: v.city,
                 States: v.abbr,

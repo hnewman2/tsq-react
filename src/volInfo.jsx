@@ -112,7 +112,7 @@ export default class VolInfo extends Component {
     }
 
     onSelectPartner(selectedVal) {
-        window.VolInfoComponent.setState({selectedPartner: selectedVal.key});
+        window.VolInfoComponent.setState({ selectedPartner: selectedVal.key });
     }
 
 
@@ -149,8 +149,12 @@ export default class VolInfo extends Component {
             .then(response => {
                 response.json().then(data => {
                     let list = data.map(v =>
-                        <Fragment >
-                            <label class='check-box-labels-not-bold'><input name='volTypeCheckbox' type='checkbox' defaultChecked={this.hasVolType(v.type_ID)} id={v.type_ID} onChange={(e) => this.onChangeVolTypeCheckbox(e)} />{v.typeDescription}</label>&nbsp;&nbsp;</Fragment>
+                        <div>
+                            <span class='check-box-labels-not-bold'>
+                                <input name='volTypeCheckbox' type='checkbox'
+                                    defaultChecked={this.hasVolType(v.type_ID)} id={v.type_ID}
+                                    onChange={(e) => this.onChangeVolTypeCheckbox(e)} />{v.typeDescription}
+                            </span>&nbsp;&nbsp;</div>
                     );
                     this.setState({
                         volTypes: list
@@ -498,6 +502,22 @@ export default class VolInfo extends Component {
         return todayString;
     }
 
+/*volTypes(){
+
+    let temp= []
+  for(var i=0; i<this.state.volTypes.length;i++){
+    if (i%3==0){
+        console.log(this.state.volTypes[i]);
+        //temp.push(this.state.volTypes[i] + <br/>);
+    }
+    else{
+        temp.push(this.state.volTypes[i]);
+    }
+
+  }
+  return temp;
+}*/
+
     EditInfoModal() {
         if (this.state.editInfo) {
             return <Modal center
@@ -517,7 +537,7 @@ export default class VolInfo extends Component {
                                     onChange={(event) => this.onChangeFirstName(event)}
                                     defaultValue={this.props.currentVolunteer.firstName}
                                 /></td>
-                                <td rowspan='6' class='vol-types-checkboxes'>Volunteer Type:<br />{this.state.volTypes}</td>
+                                <td rowspan='6' class='column2 vol-types-checkboxes'>Volunteer Type:<br />{this.state.volTypes}</td>
                             </tr>
                             <tr>
                                 <td class='column1'>Last Name: </td>
@@ -742,13 +762,13 @@ export default class VolInfo extends Component {
                         <table class='vol-email-route-sheet'>
                             <tr>
                                 <td colspan='2'>Please confirm that the below email is correct: </td>
-                             </tr>   
-                             <tr><td colspan='2'><input class='email-input-route-sheet' type='email' defaultValue={this.props.currentVolunteer.email}
-                                    onChange={(e) => this.setState({ email: e.target.value })} /></td>
-                             </tr>
-                             <tr>
-                               <td colspan='2'><input type='checkbox' onChange={(e) => this.setState({ resetEmail: e.target.checked })} />Set as Preferred Email</td>
-                               </tr>
+                            </tr>
+                            <tr><td colspan='2'><input class='email-input-route-sheet' type='email' defaultValue={this.props.currentVolunteer.email}
+                                onChange={(e) => this.setState({ email: e.target.value })} /></td>
+                            </tr>
+                            <tr>
+                                <td colspan='2'><input type='checkbox' onChange={(e) => this.setState({ resetEmail: e.target.checked })} />Set as Preferred Email</td>
+                            </tr>
                             {/*<tr>
                                 <td>Enter password for TSQ email:</td>
                                 <td><input type='password' autoComplete='new-password' onChange={(e) => this.setState({ password: e.target.value })} /></td>

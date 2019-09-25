@@ -555,7 +555,8 @@ export default class AdminMessages extends Component {
                     open={this.state.showConfirmModal}
                     onClose={() => this.setState({ showConfirmModal: false })}>
                     {this.state.statusMsg}
-                    <h2>Are you sure you would like to send reminder to all volunteers and recipients?</h2><br />
+                    <h2>Are you sure you would like to send the following reminder to all volunteers and recipients?</h2><br />
+                    <p>{this.state.body} </p><br/>
                     <label>Please enter password to continue:</label> <br />
                     <input type='password' onChange={event => this.onChangePassword(event)} />
                     <br /><br />

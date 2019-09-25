@@ -79,8 +79,11 @@ export default class KeyPad extends Component {
             .then(response => {
                 response.json().then(data => {
                     let list = data.map(v=>
-                        <Fragment >
-                        <label class='check-box-labels-not-bold'><input type='checkbox' id={v.type_ID} onChange={(e) => this.onChangeVolTypeCheckbox(e)}/>{v.typeDescription}</label>&nbsp;&nbsp;</Fragment>
+                        <div >
+                        <span class='check-box-labels-not-bold'>
+                            <input type='checkbox' id={v.type_ID}
+                             onChange={(e) => this.onChangeVolTypeCheckbox(e)}/>
+                             {v.typeDescription}</span>&nbsp;&nbsp;</div>
                         );
                     this.setState({
                         volTypes: list
